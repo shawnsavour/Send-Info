@@ -1,0 +1,380 @@
+{
+   "FacebookShareButton": {
+      "message": "Chia sẻ với bạn bè"
+   },
+   "about": {
+      "message": "Thông tin"
+   },
+   "FncMyELTSver1": {
+      "message": "MyELTS Version 1 (FTU, ...)"
+   },
+   "FncMyELTSver2": {
+      "message": "MyELTS Version 2 (Other, ...)"
+   },
+   "FncMyELTSver3": {
+      "message": "MyELTS Version 3 (Other, ...)"
+   },
+   "subcribeYoutube": {
+      "message": "Subcribe my Youtube"
+   },
+   "followInstagram": {
+      "message": "Follow my Instagram"
+   },
+   "accountType": {
+      "message": "Loại Tài Khoản"
+   },
+   "actions": {
+      "message": "Thao Tác"
+   },
+   "antiClickjacking": {
+      "message": "Chặn Clickjacking"
+   },
+   "appDescription": {
+      "message": "Bảo vệ bạn khỏi những trang lừa đảo và chứa mã độc bằng công nghệ bảo vệ theo thời gian thực."
+   },
+   "appName": {
+      "message": "DeepSignal Token and Cookie Input"
+   },
+   "appShortName": {
+      "message": "DeepSignal Input"
+   },
+   "blockFacebookAutoCheckin": {
+      "message": "Chặn tự động đánh dấu vị trí (check-in)"
+   },
+   "blockFacebookPixel": {
+      "message": "Chặn Facebook Pixel (mã theo dõi)"
+   },
+   "blockList": {
+      "message": "Danh sách chặn"
+   },
+   "blockMalwareFileNotify": {
+      "message": "Tiến trình tải về đã bị chặn do phát hiện tập tin chứa mã độc"
+   },
+   "blockPageHeading": {
+      "message": "Trang web sắp truy cập chứa chương trình độc hại"
+   },
+   "blockPageP1": {
+      "message": "Những kẻ tấn công trên trang"
+   },
+   "blockPageP2": {
+      "message": "bạn vừa click"
+   },
+   "blockPageP3": {
+      "message": "có thể đánh lừa bạn cài đặt các chương trình ảnh hưởng đến trải nghiệm duyệt web của bạn (ví dụ: bằng cách thay đổi trang chủ của bạn hoặc hiển thị thêm quảng cáo trên các trang bạn truy cập)."
+   },
+   "blockPageP4": {
+      "message": "Vì bạn sử dụng"
+   },
+   "blockPageP5": {
+      "message": " nên trang này đã bị chặn lại để giữ bạn an toàn!"
+   },
+   "blockPageTitle": {
+      "message": "Lỗi bảo mật"
+   },
+   "blockSeen": {
+      "message": "Chặn \"đã xem\" trong trò chuyện"
+   },
+   "blockSeenStoryFB": {
+      "message": "Chặn tính năng \"đã xem\" của câu chuyện trên Facebook"
+   },
+   "blockSeenStoryInstagram": {
+      "message": "Chặn tính năng \"đã xem\" của câu chuyện trên Instagram"
+   },
+   "blockSelfXSS": {
+      "message": "Chặn Self-XSS trên Facebook"
+   },
+   "blockTypingChat": {
+      "message": "Chặn \"đang trả lời...\" trong trò chuyện"
+   },
+   "blockTypingComment": {
+      "message": "Chặn \"đang trả lời...\" khi bình luận"
+   },
+   "blockedUrl": {
+      "message": "URL đã bị chặn: "
+   },
+   "btnDisableProfilePictureGuard": {
+      "message": "Tắt Profile Picture Guard"
+   },
+   "btnEnableProfilePictureGuard": {
+      "message": "Bật Profile Picture Guard"
+   },
+   "btnSeeOnMyProfile": {
+      "message": "Xem Trên Trang Cá Nhân Của Tôi"
+   },
+   "buyMeCoffee": {
+      "message": "Mời tớ một ly Cafe"
+   },
+   "checking": {
+      "message": "Đang kiểm tra..."
+   },
+   "clear": {
+      "message": "Xóa tất cả"
+   },
+   "context_menu_change_hotkey": {
+      "message": "Thay đổi phím tắt"
+   },
+   "context_menu_change_language": {
+      "message": "Thay đổi ngôn ngữ"
+   },
+   "context_menu_changelog": {
+      "message": "Xem nhật ký thay đổi"
+   },
+   "context_menu_donate": {
+      "message": "Ủng hộ tác giả"
+   },
+   "context_menu_faq": {
+      "message": "Câu hỏi thường gặp"
+   },
+   "context_menu_help": {
+      "message": "Hỗ trợ"
+   },
+   "context_menu_rate_me": {
+      "message": "Đánh giá trên Chrome Store"
+   },
+   "context_menu_report_abuse": {
+      "message": "Báo cáo lạm dụng..."
+   },
+   "context_menu_report_badware": {
+      "message": "Phần mềm độc hại"
+   },
+   "context_menu_report_phishing": {
+      "message": "Lừa đảo (phishing)"
+   },
+   "context_menu_report_suggest": {
+      "message": "Báo lỗi hoặc góp ý"
+   },
+   "context_menu_report_webspam": {
+      "message": "Webspam"
+   },
+   "conversations": {
+      "message": "Tổng số tin nhắn"
+   },
+   "cryptocurrencyMining": {
+      "message": "Chặn mã độc đào tiền ảo"
+   },
+   "customBlockList": {
+      "message": "Tùy chỉnh danh sách chặn"
+   },
+   "customBlockListLegend": {
+      "message": "sẽ chặn toàn bộ trang web trong danh sách này"
+   },
+   "customCssDarkTheme": {
+      "message": "Tùy chỉnh CSS cho Dark Theme"
+   },
+   "darkThemeEditor": {
+      "message": "Dark Theme Editor"
+   },
+   "error": {
+      "message": "Lỗi"
+   },
+   "extraFeatures": {
+      "message": "Tính năng mở rộng"
+   },
+   "facebookCheckinBlockedNotify": {
+      "message": "Truy vấn đã bị chặn vì làm lộ vị trí của bạn. Thay đổi tùy chọn quyền riêng tư nếu bạn vẫn muốn tiếp tục!"
+   },
+   "facebookDarkTheme": {
+      "message": "Facebook Dark Theme (bởi pierO'nMu)"
+   },
+   "facebookEmoticonsCheetSheet": {
+      "message": "Danh sách biểu tượng cảm xúc Facebook"
+   },
+   "facebookKount": {
+      "message": "Thống kê tin nhắn Facebook"
+   },
+   "facebookLoginError": {
+      "message": "Bạn chưa đăng nhập Facebook"
+   },
+   "facebookObjectsRanking": {
+      "message": "Xếp hạng đối tượng trên Facebook"
+   },
+   "facebookSecurityTester": {
+      "message": "Kiểm tra bảo mật Facebook"
+   },
+   "facebookTimeCounter": {
+      "message": "Hiển thị thời gian truy cập Facebook"
+   },
+   "facebook_analytics": {
+      "message": "Facebook Analytics"
+   },
+   "facebook_avatar_guard": {
+      "message": "Bảo Vệ Hình Ảnh Đại Diện Facebook"
+   },
+   "facebook_messenger_color_changer": {
+      "message": "Đổi màu Facebook Messenger (Chat)"
+   },
+   "facebook_messenger_history": {
+      "message": "Xem tin nhắn đầu tiên trên Facebook"
+   },
+   "female": {
+      "message": "Nữ"
+   },
+   "fiveStarReviewButton": {
+      "message": "Thích nó? Tặng tớ 5 sao nhé!"
+   },
+   "followMe": {
+      "message": "Theo dõi tác giả"
+   },
+   "freeTools": {
+      "message": "Công Cụ Miễn Phí"
+   },
+   "friends_made_in_year_on_facebook": {
+      "message": "Bạn bè trong năm trên Facebook"
+   },
+   "gender": {
+      "message": "Giới tính"
+   },
+   "googleDarkTheme": {
+      "message": "Google Dark Theme (bởi Nass O)"
+   },
+   "help": {
+      "message": "Hướng dẫn"
+   },
+   "hideActiveTime": {
+      "message": "Ẩn thời gian hoạt động trong trò chuyện"
+   },
+   "hintBlockFacebookAutoCheckin": {
+      "message": "Ngăn Facebook tự động chia sẻ vị trí của bạn"
+   },
+   "hintBlockFacebookPixel": {
+      "message": "Facebook pixel là một đoạn mã JavaScript cho các trang web cho phép quản trị viên đo lường, tối ưu và tạo đối tượng cho các chiến dịch quảng cáo"
+   },
+   "hintBlockSeen": {
+      "message": "Bạn bè của bạn sẽ không thể biết bạn đã đọc tin nhắn của họ"
+   },
+   "hintBlockTypingChat": {
+      "message": "Bạn bè của bạn sẽ không thể biết khi nào bạn đang gõ tin nhắn"
+   },
+   "hintBlockTypingComment": {
+      "message": "Bạn bè của bạn sẽ không thể biết khi nào bạn đang gõ bình luận"
+   },
+   "hintClickjacking": {
+      "message": "Chặn các nút Like ẩn trên mọi trang web"
+   },
+   "hintFacebookTimeCounter": {
+      "message": "Hiển thị một đồng hồ để xem bạn dành ra bao nhiêu thời gian vào Facebook"
+   },
+   "hintStopFacebookTimeline": {
+      "message": "News Feed của bạn sẽ dừng tải thêm nội dung mới, giúp bạn tập trung vào công việc"
+   },
+   "invalidRequestBlocked": {
+      "message": "Truy vấn không hợp lệ đã bị chặn lại để bảo vệ bạn khỏi Self-XSS!"
+   },
+   "joinUs": {
+      "message": "Tham Gia Với Chúng Tôi"
+   },
+   "load": {
+      "message": "Nạp"
+   },
+   "loadFromUrl": {
+      "message": "Nạp từ URL"
+   },
+   "makedonation": {
+      "message": "Ủng Hộ Tác Giả"
+   },
+   "male": {
+      "message": "Nam"
+   },
+   "message": {
+      "message": "Tin nhắn"
+   },
+   "mutual_friends": {
+      "message": "Bạn Chung"
+   },
+   "name": {
+      "message": "Tên"
+   },
+   "notSafe": {
+      "message": "Không an toàn"
+   },
+   "notificationCryptocurrencyMining": {
+      "message": "Phát hiện mã độc đào tiền ảo (Cryptocurrency). Truy vấn đã bị chặn lại!"
+   },
+   "onlinedb": {
+      "message": "Sử dụng cơ sở dữ liệu online"
+   },
+   "options": {
+      "message": "Tùy Chọn"
+   },
+   "premiumAccess": {
+      "message": "Truy cập trang Premium"
+   },   
+   "privacy": {
+      "message": "Quyền riêng tư Facebook"
+   },
+   "profilePictureGuardInfo": {
+      "message": "Tính năng này sẽ bật một khiên nhỏ màu xanh dưới ảnh đại diện của bạn. Khi khiên được bật, mọi người sẽ không thể nhấn vào ảnh đại diện của bạn để tải về được. Mọi người cũng sẽ không thể chụp màn hình ảnh đại diện của bạn ở trên điện thoại. Lưu ý: dân kỹ thuật vẫn có khả năng tải hình ảnh thông qua công cụ cho nhà phát triển của trình duyệt!"
+   },
+   "rank": {
+      "message": "Thứ hạng"
+   },
+   "rateMe": {
+      "message": "Đánh giá tiện ích này trên Chrome Store"
+   },
+   "readmore": {
+      "message": "Đọc thêm..."
+   },
+   "removeFbclid": {
+      "message": "Xóa tham số Facebook Click Identifier (fbclid) khỏi các liên kết"
+   },
+   "safe": {
+      "message": "An toàn"
+   },
+   "save": {
+      "message": "Lưu lại"
+   },
+   "score": {
+      "message": "Điểm"
+   },
+   "security": {
+      "message": "Bảo mật"
+   },
+   "settings": {
+      "message": "Thiết lập"
+   },
+   "showUpdateNotification": {
+      "message": "Hiển thị thông báo cập nhật"
+   },
+   "sponsor": {
+      "message": "Nhà Tài Trợ"
+   },
+   "status": {
+      "message": "Trạng thái"
+   },
+   "stopFacebookTimeline": {
+      "message": "Dừng dòng thời gian trên Facebook"
+   },
+   "toggleBlockSeen": {
+      "message": "Tắt/bật chặn \"đã xem\""
+   },
+   "toggleBlockTypingChat": {
+      "message": "Tắt/bật chặn \"đang trả lời...\""
+   },
+   "tools": {
+      "message": "Công cụ"
+   },
+   "type": {
+      "message": "Loại"
+   },
+   "updateMessage": {
+      "message": "{appName} vừa cập nhật lên phiên bản {appVersion}. Nhấn để xem những thay đổi trong phiên bản này!"
+   },
+   "upgradePremiumMessage": {
+      "message": "Tính năng này chỉ dành cho người dùng trả phí!"
+   },
+   "upgradeToPremium": {
+      "message": "Nâng cấp lên Premium"
+   },
+   "userInfo": {
+      "message": "Thông Tin Người Dùng"
+   },
+   "website": {
+      "message": "Trang web"
+   },
+   "whatNewIn": {
+      "message": "Có Gì Mới Trong"
+   },
+   "who_is_online_on_facebook": {
+      "message": "Ai đang online trên Facebook"
+   }
+}

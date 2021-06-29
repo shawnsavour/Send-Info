@@ -1,0 +1,108 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,shrink-to-fit=no" name="viewport">
+    <title>MyELTS Answer by Shawn Savour</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/options.css">
+    <script src="js/jquery-3.5.1.slim.min.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar" id="sidebar" data-color="red" data-image="https://i.imgur.com/zfvF5UR.jpg">
+            <sidebar-content></sidebar-content>
+        </div>
+        <div class="main-panel">
+            <nav class="navbar navbar-expand-lg" id="shawn-savour-navbar">
+                <navbar-content></navbar-content>
+            </nav>
+            <div class="content" id="shawn_savour">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Version của MyELTS</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form action="#" method="post" v-on:submit.prevent="onSubmit">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" id="FncMyELTSver1" value="FncMyELTSver1" v-model="FncMyELTS" @change="onSubmit"> 
+                                                    <span></span>
+                                                    {{i18n('FncMyELTSver1')}}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" id="FncMyELTSver2" value="FncMyELTSver2" v-model="FncMyELTS" @change="onSubmit"> 
+                                                    <span></span>
+                                                    {{i18n('FncMyELTSver2')}}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="radio" id="FncMyELTSver3" value="FncMyELTSver3" v-model="FncMyELTS" @change="onSubmit"> 
+                                                    <span></span>
+                                                    {{i18n('FncMyELTSver3')}}
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Shawn Savour</h4>
+                                </div>
+                                <div class="card-body">
+                                    <form action="#" method="post" v-on:submit.prevent="onSubmit">
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" v-model="subcribeYoutube" @change="onSubmit">
+                                                 <span class="form-check-sign"></span>
+                                                {{i18n('subcribeYoutube')}}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" v-model="followInstagram" @change="onSubmit">
+                                                 <span class="form-check-sign"></span>
+                                                {{i18n('followInstagram')}}
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer id="footer" class="footer">
+                <div class="container">
+                    <nav>
+                        <ul class="footer-menu">
+                            <li><a href="options.html" target="_self">Home</a></li>
+                            <li><a href="#" target="_blank">Reviews</a></li>
+                            <li><a href="#" target="_blank">About</a></li>
+                            <li><a href="https://www.facebook.com/groups/j2team.community/" target="_blank">FB</a></li>
+                        </ul>
+                        <p class="copyright text-center">
+                            © 2021 <a href="https://www.shawnsavour.com/" target="_blank">Shawn Savour</a>
+                    </nav>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="js/light-bootstrap-dashboard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="js/template.js"></script>
+    <script src="js/options.js"></script>
+</body>
+
+</html>

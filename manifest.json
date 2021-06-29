@@ -1,0 +1,36 @@
+{
+    "name": "__MSG_appName__",
+    "author": "Shawn Savour",
+    "description": "__MSG_appDescription__",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "icons": {
+            "16": "img/icon16.png",
+            "48": "img/icon48.png",
+            "128": "img/icon128.png"
+    }, 
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["/js/jquery-3.5.1.slim.min.js", "js/content.js"]
+        }
+    ],
+    "background": {
+        "persistent": true,
+        "scripts": [ "js/background.js" ]
+     },
+    "browser_action": {
+        "default_title": "__MSG_appName__",
+        "default_popup": "popup.html",
+        "default_icon": "img/icon_128.png"
+    },
+    "permissions": [ "tabs", "*://*/*", "http://*/*", "https://*/*", "notifications", "contextMenus", "cookies", "storage", "unlimitedStorage", "webRequest", "webRequestBlocking" ],
+    "default_locale": "en",
+    "homepage_url": "http://shawnsavour.com/",
+    "update_url": "https://clients2.google.com/service/update2/crx",
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://ssl.google-analytics.com https://ajax.googleapis.com https://cdnjs.cloudflare.com; object-src 'self'"
+}
