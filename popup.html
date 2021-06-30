@@ -23,7 +23,8 @@
                             <h3 class="panel-title"><span class="glyphicon glyphicon-certificate" aria-hidden="true"></span> Cookies for {{sitename}}</h3>
                         </div>
                         <div class="panel-body">
-                            <form action="" method="POST" role="form" v-on:submit.prevent="saveOptions"><input type="file" class="hidden" id="importCookiesInput" accept=".txt, .json" v-on:change="importCookiesFromFile">
+                            <form action="" method="POST" role="form" v-on:submit.prevent="saveOptions">
+                                <!-- <input type="file" class="hidden" id="importCookiesInput" accept=".txt, .json" v-on:change="importCookiesFromFile"> -->
                                 <div class="form-group">
                                     <!-- <label for="password">Password <span class="text-info">(leave
                                             blank
