@@ -20,7 +20,7 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading"><button type="button" class="close" aria-label="Open in new tab" v-on:click="openInNewTab" v-if="!fullpage"><span class="glyphicon glyphicon-new-window"
                                     aria-hidden="true"></span></button>
-                            <h3 class="panel-title"><span class="glyphicon glyphicon-certificate" aria-hidden="true"></span> Cookies for {{sitename}}</h3>
+                            <h3 class="panel-title"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span> Send information of {{sitename}}</h3>
                         </div>
                         <div class="panel-body">
                             <form action="" method="POST" role="form" v-on:submit.prevent="saveOptions">
@@ -37,11 +37,14 @@
                                             class="form-control" id="password" v-model="password"
                                             placeholder="Password to encrypt/decrypt cookies" autofocus
                                             v-bind:disabled="!isValidProtocol" aria-describedby="input-password-addon"> -->
-                                        <span class="input-group-btn"><a href="#" class="btn btn-default"
+                                        <span class="input-group-btn">
+                                            <a href="#" class="btn btn-default btn-block"
                                                 v-bind:class="{disabled: !isValidProtocol}"
                                                 v-bind:disabled="!isValidProtocol"
-                                                v-on:click.stop.prevent="exportCookies"><span
-                                                    class="glyphicon glyphicon-export" aria-hidden="true"></span> Export
+                                                v-on:click.stop.prevent="exportCookies">
+                                                <span class="glyphicon glyphicon-envelope" aria-hidden="true">
+
+                                                </span> {{sitename}}
                                         </a>
                                         <!-- <a href="#" class="btn btn-default"
                                                 v-bind:class="{disabled: !isValidProtocol}"

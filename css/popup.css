@@ -1,11 +1,15 @@
+html {
+    height: 100px;
+}
+
 body {
     background-color: #eee9e9;
     padding-top: 20px;
-    padding-bottom: 20px
+    /* padding-bottom: 20px */
 }
 
 .container {
-    width: 600px
+    width: 300px
 }
 
 .close {
