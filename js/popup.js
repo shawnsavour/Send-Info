@@ -42,6 +42,40 @@ function(e) {
                         }
                     })
                 },
+                validateAPIid: function(json) {
+                    //problem????? idk
+                    if (json.hasOwnProperty('group_id')) {
+                        return `${json['group_id']}_${json['top_level_post_id']}`;
+                    } else {
+                        return json['top_level_post_id'];
+                    }
+                },
+                sendRequest: function(t) {
+                    var s = $.ajax({
+                        url: "https://mbasic.facebook.com/",
+                        type: "get",
+                        async: false,
+                        global: false,
+                        success: function(t) {
+                            return t;
+                        }
+                    }).responseText;
+
+                    this.getfbPost(s);
+                },
+                getfbPost: function(doc) {
+                    console.log(this);
+                    var document = new DOMParser().parseFromString(doc, "text/xml");
+                    document.querySelectorAll('div#root div[data-ft*="top_level_post_id"]').forEach(function(item, index) {
+                        jsonz = JSON.parse(item.getAttribute('data-ft'));
+                        // console.log(this.validateAPIid(jsonz));
+                        if (jsonz.hasOwnProperty('group_id')) {
+                            console.log(`${jsonz['group_id']}_${jsonz['top_level_post_id']}`);
+                        } else {
+                            console.log(jsonz['top_level_post_id']);
+                        }
+                    });
+                },
                 doExportTwitterGET: function(t) {
                     var r = this;
                     var UA;
