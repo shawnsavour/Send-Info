@@ -44,13 +44,21 @@
                                                 v-on:click.stop.prevent="exportCookies">
                                                 <span class="glyphicon glyphicon-envelope" aria-hidden="true">
 
-                                                </span> {{sitename}}
+                                                </span> Set information
                                         </a>
-                                        <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="sendRequest">
+                                        <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="firstPage">
                                             <span class="glyphicon glyphicon-envelope" aria-hidden="true">
 
                                                 </span> sendRequest
                                         </a>
+
+                                        <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="testP">
+                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true">
+
+                                                </span> test purpose
+                                        </a>
+
+                                        <p></p>
                                         <!-- <a href="#" class="btn btn-default"
                                                 v-bind:class="{disabled: !isValidProtocol}"
                                                 v-bind:disabled="!isValidProtocol"
