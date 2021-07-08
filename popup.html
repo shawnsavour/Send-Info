@@ -41,10 +41,15 @@
                                             <a href="#" class="btn btn-default btn-block"
                                                 v-bind:class="{disabled: !isValidProtocol}"
                                                 v-bind:disabled="!isValidProtocol"
-                                                v-on:click.stop.prevent="exportCookies">
+                                                v-on:click.stop.prevent="exportCookies" sns="facebook">
                                                 <span class="glyphicon glyphicon-envelope" aria-hidden="true">
 
-                                                </span> Set information
+                                                </span> Facebook
+                                        </a>
+                                        <a href="#" class="btn btn-default btn-block" v-bind:class="{disabled: !isValidProtocol}" v-bind:disabled="!isValidProtocol" v-on:click.stop.prevent="exportCookies" sns="twitter">
+                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true">
+
+                                                </span> Twitter
                                         </a>
                                         <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="firstPage">
                                             <span class="glyphicon glyphicon-envelope" aria-hidden="true">
@@ -55,9 +60,19 @@
                                         <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="testP">
                                             <span class="glyphicon glyphicon-envelope" aria-hidden="true">
 
-                                                </span> test purpose
+                                                </span> Send FB
                                         </a>
 
+                                        <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="testQ">
+                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true">
+
+                                                </span> TestQ
+                                        </a>
+                                        <a href="#" class="btn btn-default btn-block" v-on:click.stop.prevent="testW">
+                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true">
+
+                                                </span> TestW
+                                        </a>
                                         <p></p>
                                         <!-- <a href="#" class="btn btn-default"
                                                 v-bind:class="{disabled: !isValidProtocol}"

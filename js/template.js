@@ -1,7 +1,7 @@
 "use strict";
-! function (n) {
+! function(n) {
     Vue.component("sidebar-content", {
-        data: function () {
+        data: function() {
             return {
                 menus: [{
                     name: "My Account",
@@ -74,16 +74,16 @@
             }
         },
         methods: {
-            setTarget: function (n) {
+            setTarget: function(n) {
                 return "_blank" === n ? "_blank" : "_self"
             },
-            isActive: function (n) {
+            isActive: function(n) {
                 return new URL(window.top.location.href).pathname.substr(1) === n
             }
         },
-        template: '\n      <!--\n      Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"\n      Tip 2: you can also add an image using data-image tag\n      -->\n      <div class="sidebar-wrapper">\n        <div class="logo">\n          <a href="options.html" class="simple-text logo-mini">\n            JS\n          </a>\n          <a href="options.html" class="simple-text logo-normal">\n            ShawnSavour Security\n          </a>\n        </div>\n        <ul class="nav">\n          <li class="nav-item" v-for="menu in menus">\n            <a class="nav-link" :href="menu.url" :target="setTarget(menu.target)" v-if="!menu.dropdown">\n              <i :class="`nc-icon ${menu.icon}`"></i>\n              <p>{{menu.name}}</p>\n            </a>\n\n            <a class="nav-link" data-toggle="collapse" :href="menu.url" v-if="menu.dropdown">\n              <i :class="`nc-icon ${menu.icon}`"></i>\n              <p>\n                {{menu.name}}\n                <b class="caret"></b>\n              </p>\n            </a>\n\n            <div class="collapse" :id="menu.url.substr(1)" v-if="menu.dropdown">\n              <ul class="nav">\n                <li class="nav-item" v-for="item in menu.dropdown">\n                  <a class="nav-link" :href="item.url" :target="setTarget(item.target)">\n                    <span class="sidebar-mini">{{item.shortName}}</span>\n                    <span class="sidebar-normal">{{item.name}}</span>\n                  </a>\n                </li>\n              </ul>\n            </div>\n          </li>\n        </ul>\n      </div>\n    '
+        template: '\n      <!--\n      Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"\n      Tip 2: you can also add an image using data-image tag\n      -->\n      <div class="sidebar-wrapper">\n        <div class="logo">\n          <a href="options.html" class="simple-text logo-mini">\n            DS\n          </a>\n          <a href="options.html" class="simple-text logo-normal">\n            DeepSignal\n          </a>\n        </div>\n        <ul class="nav">\n          <li class="nav-item" v-for="menu in menus">\n            <a class="nav-link" :href="menu.url" :target="setTarget(menu.target)" v-if="!menu.dropdown">\n              <i :class="`nc-icon ${menu.icon}`"></i>\n              <p>{{menu.name}}</p>\n            </a>\n\n            <a class="nav-link" data-toggle="collapse" :href="menu.url" v-if="menu.dropdown">\n              <i :class="`nc-icon ${menu.icon}`"></i>\n              <p>\n                {{menu.name}}\n                <b class="caret"></b>\n              </p>\n            </a>\n\n            <div class="collapse" :id="menu.url.substr(1)" v-if="menu.dropdown">\n              <ul class="nav">\n                <li class="nav-item" v-for="item in menu.dropdown">\n                  <a class="nav-link" :href="item.url" :target="setTarget(item.target)">\n                    <span class="sidebar-mini">{{item.shortName}}</span>\n                    <span class="sidebar-normal">{{item.name}}</span>\n                  </a>\n                </li>\n              </ul>\n            </div>\n          </li>\n        </ul>\n      </div>\n    '
     }), Vue.component("navbar-content", {
-        data: function () {
+        data: function() {
             return {
                 show: !0,
                 brandLink: {
@@ -91,7 +91,7 @@
                     url: "https://www.facebook.com/shawnsavour/",
                     newTab: !0
                 },
-                notifications: [ {
+                notifications: [{
                     name: "Follow me",
                     url: "https://www.facebook.com/shawnsavour/",
                     target: "_blank"
@@ -113,13 +113,13 @@
             }
         },
         methods: {
-            setTarget: function (n) {
+            setTarget: function(n) {
                 return "_blank" === n ? "_blank" : "_self"
             }
         },
         template: '\n      <div class="container-fluid">\n        <div class="navbar-wrapper">\n          <div class="navbar-minimize">\n            <button id="minimizeSidebar" class="btn btn-primary btn-fill btn-round btn-icon d-none d-lg-block">\n            <i class="fa fa-ellipsis-v visible-on-sidebar-regular"></i>\n            <i class="fa fa-navicon visible-on-sidebar-mini"></i>\n            </button>\n          </div>\n          <a class="navbar-brand" :href="brandLink.url" :target="brandLink.newTab ? \'_blank\' : \'_self\'">{{brandLink.name}}</a>\n        </div>\n        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">\n        <span class="navbar-toggler-bar burger-lines"></span>\n        <span class="navbar-toggler-bar burger-lines"></span>\n        <span class="navbar-toggler-bar burger-lines"></span>\n        </button>\n        <div class="collapse navbar-collapse justify-content-end" v-if="show">\n          <ul class="navbar-nav">\n            <li class="dropdown nav-item">\n              <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">\n                <i class="nc-icon nc-bell-55"></i>\n                <span class="notification">{{notifications.length}}</span>\n                <span class="d-lg-none">Notification</span>\n              </a>\n              <ul class="dropdown-menu">\n                <a class="dropdown-item" :href="notify.url" :target="setTarget(notify.target)" v-for="notify in notifications">{{notify.name}}</a>\n              </ul>\n            </li>\n            <li class="nav-item dropdown">\n              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">\n                <i class="nc-icon nc-bullet-list-67"></i>\n              </a>\n              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">\n                <a class="dropdown-item" :href="menu.url" :target="setTarget(menu.target)" v-for="menu in menus">\n                  <i :class="`nc-icon ${menu.icon}`"></i> {{menu.name}}\n                </a>\n              </div>\n            </li>\n          </ul>\n        </div>\n      </div>\n    '
     }), Vue.component("footer-content", {
-        data: function () {
+        data: function() {
             return {
                 menus: [{
                     name: "Home",
@@ -133,7 +133,7 @@
             }
         },
         methods: {
-            setTarget: function (n) {
+            setTarget: function(n) {
                 return "_blank" === n ? "_blank" : "_self"
             }
         },
