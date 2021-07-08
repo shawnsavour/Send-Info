@@ -34,18 +34,17 @@ function(e) {
                     }, async function(e) {
                         switch (snsTarget) {
                             case 'facebook':
-                                if ((await t.checkLogin(snsTarget)) == 1) {
+                                if (await t.checkLogin(snsTarget)) {
                                     t.doExportFacebookGET('https://mbasic.facebook.com');
                                 } else {
                                     chrome.tabs.create({ url: 'https://www.facebook.com/' });
                                 }
                                 break;
                             case 'twitter':
-                                if (await t.checkLogin(snsTarget) == 1) {
+                                if (await t.checkLogin(snsTarget)) {
                                     t.doExportTwitterGET('https://twitter.com');
                                 } else {
-                                    // t.doExportTwitterGET(e[0].url);
-                                    chrome.tabs.create({ url: 'https://twitter.com' });
+                                    chrome.tabs.create({ url: 'https://twitter.com/login' });
                                 }
                                 break;
                             default:
@@ -71,12 +70,15 @@ function(e) {
                         e.cookies.getAll({ url: 'https://mbasic.facebook.com' }, function(cookies) {
                             cookies.forEach(item => {
                                 if (item['name'] == "c_user") {
-                                    resolve(1); //signed in
+                                    resolve(true); //signed in
+                                    return;
                                 }
+                                resolve(false);
                             })
                         })
                     });
                     const result = await p;
+                    console.log(result);
                     return result;
                 },
                 checktwLogin: async function() {
@@ -84,12 +86,15 @@ function(e) {
                         e.cookies.getAll({ url: 'https://twitter.com' }, function(cookies) {
                             cookies.forEach(item => {
                                 if (item['name'] == "twid") {
-                                    resolve(1); //signed in
+                                    resolve(true); //signed in
+                                    return;
                                 }
+                                resolve(false);
                             })
                         })
                     });
                     const result = await p;
+                    console.log(result);
                     return result;
                 },
                 docparse: function(doc) {
@@ -107,7 +112,6 @@ function(e) {
                 },
                 testP: function() {
                     t = this;
-                    console.log(uid);
                     var abc = this.sendRequest("https://mbasic.facebook.com/")
                     var nf = this.docparse(abc);
                     nf.querySelectorAll("a[href$='#footer_action_list']").forEach(function(item, index) {
@@ -116,7 +120,7 @@ function(e) {
                             href = `https://mbasic.facebook.com${href}`;
                         }
                         console.log(href);
-                        t.sendfbHTML(uid, t.sendRequest(href));
+                        t.sendfbHTML(t.sendRequest(href));
                     });
                 },
                 validateAPIid: function(json) {
@@ -153,21 +157,22 @@ function(e) {
                     }).responseText;
                     return s;
                 },
-                sendfbHTML: function(uid, html) {
+                sendfbHTML: function(html) {
                     t = this;
-                    console.log(uid);
-                    var s = $.ajax({
-                        url: "http://localhost/testweb/facebook_collection.php",
-                        data: {
-                            uid: uid,
-                            data: html
-                        },
-                        type: "post",
-                        success: function(o) {
-                            console.log(o);
-                        }
-                    }).responseText;
-                    return s;
+                    // console.log(uid);
+                    console.log(html);
+                    // var s = $.ajax({
+                    //     url: "http://localhost/testweb/facebook_collection.php",
+                    //     data: {
+                    //         uid: uid,
+                    //         data: html
+                    //     },
+                    //     type: "post",
+                    //     success: function(o) {
+                    //         console.log(o);
+                    //     }
+                    // }).responseText;
+                    // return s;
                 },
                 testQ: async function() {
                     var p = new Promise(function(resolve, reject) {
@@ -216,18 +221,20 @@ function(e) {
                         success: function(o) {}
                     }).responseText;
 
-                    $.ajax({
-                        url: 'http://localhost/testweb/facebook_collection.php',
-                        type: 'POST',
-                        data: JSON.stringify({
-                            uid: t.fbid,
-                            data: data
-                        }),
-                        success: function(result) {
-                            console.log(result);
-                        }
+                    console.log(data);
+                    // Send data
+                    // $.ajax({
+                    //     url: 'http://localhost/testweb/facebook_collection.php',
+                    //     type: 'POST',
+                    //     data: JSON.stringify({
+                    //         uid: t.fbid,
+                    //         data: data
+                    //     }),
+                    //     success: function(result) {
+                    //         console.log(result);
+                    //     }
 
-                    });
+                    // });
                 },
                 getuToken: function() {
                     var s = $.ajax({
