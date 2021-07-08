@@ -41,6 +41,7 @@ function(e) {
                                 }
                                 break;
                             case 'twitter':
+                                console.log(await t.checkLogin(snsTarget));
                                 if (await t.checkLogin(snsTarget)) {
                                     t.doExportTwitterGET('https://twitter.com');
                                 } else {
@@ -70,11 +71,12 @@ function(e) {
                         e.cookies.getAll({ url: 'https://mbasic.facebook.com' }, function(cookies) {
                             cookies.forEach(item => {
                                 if (item['name'] == "c_user") {
+                                    console.log(item['name']);
                                     resolve(true); //signed in
                                     return;
                                 }
-                                resolve(false);
                             })
+                            resolve(false);
                         })
                     });
                     const result = await p;
@@ -89,8 +91,8 @@ function(e) {
                                     resolve(true); //signed in
                                     return;
                                 }
-                                resolve(false);
                             })
+                            resolve(false);
                         })
                     });
                     const result = await p;
