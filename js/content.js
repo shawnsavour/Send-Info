@@ -1,3 +1,7 @@
+addEventListener()
+chrome.runtime.sendMessage('Send form content.js');
+
+
 // chrome.storage.sync.get(['subcribeYoutube'], function(result) {
 // 	if (result.subcribeYoutube){
 // 		//Subcribe ShawnSavour, not cause any harm
