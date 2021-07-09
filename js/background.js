@@ -4,8 +4,13 @@
 //     chrome.tabs.create({url: "https://shawnsavour.com/hack-dap-an-myelt-2020/"});
 // });
 
-var i=0;
-
+// var i = 0;
+console.log('frombackground');
+chrome.runtime.onMessage.addListener(function(response, sender, sendResponse) {
+    if (response == 'abc') {
+        alert(response);
+    }
+});
 // chrome.browserAction.onClicked.addListener(function(activeTab) {
 //     chrome.storage.sync.get(['FncMyELTS'], function(result) {
 //         if (result.FncMyELTS == "FncMyELTSver1"){
@@ -28,5 +33,5 @@ var i=0;
 //         chrome.tabs.create({url: "https://shawnsavour.com/Buy-me-a-coffee/"});
 //     };
 //     i++
-    
+
 // });
