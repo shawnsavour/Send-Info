@@ -1,41 +1,45 @@
+function sendmsg(msg) {
+    chrome.runtime.sendMessage(msg);
+}
 if (window.location.href.indexOf("localhost") > -1) {
-    chrome.runtime.sendMessage('checklogin');
+    sendmsg('checklogin');
 
     document.getElementById('needLogin').onclick = function() {
-        // var email = document.getElementById("email").value;
-        // alert(email);
-        // var password = document.getElementById("password").value;
-        // alert(password);
-        // chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
-        // console.log('Set');
-        // });
-        // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-        //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
-        // });
-        chrome.runtime.sendMessage('Login');
+        sendmsg('Login');
+    };
+
+    document.getElementById('loadCookiebtn').onclick = function() {
+        sendmsg('addCookie');
     };
 
     document.getElementById('sendData').onclick = function() {
         alert('click');
-        chrome.runtime.sendMessage('sendData');
+        sendmsg('sendData');
     };
-
 }
-if (window.location.href.indexOf("mbasic.facebook.com/login/?ref=db") > -1) {
+if (window.location.href.indexOf("mbasic.facebook.com/login") > -1) {
+    try {
+        document.querySelector('input[name="login"]').onclick = function() {
+            var email = document.getElementById('m_login_email').value;
+            var password = document.querySelector('input[name="pass"]').value;
+            chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
+                console.log('Set');
+            });
+            // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            //     chrome.tabs.remove(tabs);
+            // });
+            //         });
+            // chrome.tabs.remove();
 
-    document.querySelector('input[name="login"]').onclick = function() {
-        var email = document.getElementById('m_login_email').value;
-        var password = document.querySelector('input[name="pass"]').value;
-        chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
-            console.log('Set');
-        });
-        chrome.tabs.remove();
+            // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
+            //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
+            // });
+            // sendmsg('Login');
+        };
+    } catch (err) {
+        console.log(eer);
+    }
 
-        // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-        //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
-        // });
-        // chrome.runtime.sendMessage('Login');
-    };
 }
 chrome.runtime.onMessage.addListener(gotMessage);
 
@@ -57,6 +61,11 @@ function gotMessage(message, sender, sendResponse) {
     }
 }
 
+if (window.location.href.indexOf("mbasic.facebook.com/home.php") > -1) {
+    sendmsg('doneLogin');
+    // setTimeout(sendmsg('removeCookie'), 2000);
+    // setTimeout(sendmsg('addCookie'), 2000);
+}
 // function facebookLogin() {
 //     chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
 //         chrome.tabs.query({ active: true, currentWindow: true }, function() {
