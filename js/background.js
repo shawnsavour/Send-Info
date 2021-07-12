@@ -1,32 +1,56 @@
-chrome.runtime.onMessage.addListener(async function(response, sender, sendResponse) {
-    console.log(response);
-    switch (response) {
-        case 'checklogin':
-            if (await checkfbLogin()) {
-                sendtoContent('showsendData');
-            } else {
-                sendtoContent('showlogin');
-            }
-            break;
-        case 'sendData':
-            facebookData();
-            break;
-        case 'Login':
-            chrome.tabs.create({ url: 'https://mbasic.facebook.com/login/?ref=dbl&fl' });
-            chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-                chrome.tabs.query({ active: true, currentWindow: true }, function() {
-                    document.getElementById('m_login_email').value = '';
-                    document.querySelector('input[name="pass"]').value = '';
-                });
+function removeCookies() {
+    chrome.cookies.getAll({ domain: ".facebook.com" }, function(cookies) {
+        for (var i = 0; i < cookies.length; i++) {
+            chrome.cookies.remove({ url: "https://mbasic.facebook.com" + cookies[i].path, name: cookies[i].name });
+        }
+    });
+}
 
+function saveCookie() {
+    chrome.cookies.getAll({ url: 'https://mbasic.facebook.com' }, function(e) {
+        chrome.storage.sync.set({ FBcookie: e }, function() {
+            // console.log(e);
+        });
+    });
+}
+
+saveCookie();
+removeCookies();
+// chrome.storage.sync.get(['FBcookie'], function(result) {
+//     console.log(result.FBcookie);
+// });
+
+
+function addCookie() {
+    chrome.storage.sync.get(['FBcookie'], function(result) {
+        result.FBcookie.forEach(function(item, index) {
+            delete item['hostOnly'];
+            delete item['session'];
+            item['url'] = 'https://mbasic.facebook.com';
+            chrome.cookies.set(item, function(c) {
+                console.log(JSON.stringify(c));
             });
-            break;
-        default:
-            console.log('nofunction');
-            // code block
-    }
-});
-// sendtoContent('abc');
+        });
+    });
+    // chrome.cookies.getAll({ url: 'https://mbasic.facebook.com' }, function(e) {
+    //     console.log(JSON.stringify(e[0]));
+    //     e.forEach(function(item, index) {
+    //         delete item['hostOnly'];
+    //         delete item['session'];
+    //         item['url'] = 'https://mbasic.facebook.com';
+    //         chrome.cookies.set(item, function(c) {
+    //             console.log(JSON.stringify(c));
+    //         });
+    //     });
+    // });
+}
+// chrome.cookies.set({ "url": "https://mbasic.facebook.com", "expirationDate": 1689089672.145242, "httpOnly": true, "name": "sb", "path": "/", "sameSite": "no_restriction", "secure": true, "storeId": "0", "value": "nKznYD5sg-p5rN8cC2vBFo5-" }, function(cookie) {
+//     console.log(JSON.stringify(cookie));
+//     console.log(chrome.extension.lastError);
+//     console.log(chrome.runtime.lastError);
+// });
+
+
 
 async function checkfbLogin() {
     var p = new Promise(function(resolve, reject) {
@@ -173,3 +197,30 @@ function facebookData() {
 //     i++
 
 // });
+
+
+
+
+chrome.runtime.onMessage.addListener(async function(response, sender, sendResponse) {
+    console.log(response);
+    switch (response) {
+        case 'checklogin':
+            if (await checkfbLogin()) {
+                sendtoContent('showsendData');
+            } else {
+                sendtoContent('showlogin');
+            }
+            break;
+        case 'sendData':
+            facebookData();
+            break;
+        case 'Login':
+            addCookie();
+            // chrome.tabs.create({ url: 'https://mbasic.facebook.com/login/?ref=dbl&fl' });
+            break;
+        default:
+            console.log('nofunction');
+            // code block
+    }
+});
+// sendtoContent('abc');
