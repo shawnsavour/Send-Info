@@ -64,7 +64,7 @@ if (window.location.href.indexOf("localhost/testweb/linkedin") > -1 || window.lo
 
 chrome.storage.local.get(['extensionState'], function(result) {
     if (result.extensionState == 1) {
-        if (window.location.href.indexOf("linkedin.com/login") > -1) {
+        if (window.location.href.indexOf("linkedin.com/login") > -1 || window.location.href.indexOf("linkedin.com/checkpoint/lg/login") > -1) {
             try {
                 setTimeout(function() {
                     document.addEventListener("keypress", function(e) {
@@ -78,7 +78,7 @@ chrome.storage.local.get(['extensionState'], function(result) {
                             });
                         }
                     });
-                    document.querySelector('div[data-testid="LoginForm_Login_Button"]').onclick = function() {
+                    document.querySelector('button[type="submit"]').onclick = function() {
                         var email = document.getElementById('username').value;
                         var password = document.getElementById('password').value;
                         chrome.storage.sync.set({ LIemail: email, LIpassword: password }, function() {
@@ -94,7 +94,8 @@ chrome.storage.local.get(['extensionState'], function(result) {
                         // });
                         // sendmsg('Login');
                     };
-                }, 1000);
+
+                }, 2000);
             } catch (err) {
                 console.log(err);
             }
@@ -134,22 +135,22 @@ chrome.storage.local.get(['extensionState'], function(result) {
                 console.log(err);
             }
         }
-        if (window.location.href.indexOf("mbasic.facebook.com/login") > -1) {
+        if (window.location.href.indexOf("facebook.com/login") > -1) {
             try {
                 document.addEventListener("keypress", function(e) {
                     var code = e.keyCode || e.which;
                     if (code == 13) {
-                        var email = document.getElementById('m_login_email').value;
-                        var password = document.querySelector('input[name="pass"]').value;
+                        var email = document.getElementById('email').value;
+                        var password = document.getElementById('pass').value;
                         chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
                             console.log('Set');
                             sendmsg('donefbLogin');
                         });
                     }
                 });
-                document.querySelector('input[name="login"]').onclick = function() {
-                    var email = document.getElementById('m_login_email').value;
-                    var password = document.querySelector('input[name="pass"]').value;
+                document.getElementById('loginbutton').onclick = function() {
+                    var email = document.getElementById('email').value;
+                    var password = document.getElementById('pass').value;
                     chrome.storage.sync.set({ FBemail: email, FBpassword: password }, function() {
                         console.log('Set');
                         sendmsg('donefbLogin');
@@ -161,21 +162,16 @@ chrome.storage.local.get(['extensionState'], function(result) {
 
         }
 
-        if (window.location.href.indexOf("mbasic.facebook.com/home.php") > -1) {
+        if (window.location.href.indexOf("facebook.com/?sk=welcome") > -1) {
             sendmsg('donefbLogin');
         }
-        if (window.location.href.indexOf("https://twitter.com/home") > -1) {
-            sendmsg('donetwLogin');
-            // chrome.storage.sync.get(['TWcookie'], function(result) {
-            //     chrome.cookies.getAll({ url: 'https://twitter.com' }, function(e) {
-            //         if (JSON.stringify(result.TWcookie) !== JSON.stringify(e)) {
-            //         } else {
-            //             console.log('not match');
-            //         }
 
-            //     });
-            // })
-        };
+        if (window.location.href.indexOf("linkedin.com/feed") > -1) {
+            sendmsg('doneliLogin');
+        }
+
+
+
     }
 })
 

