@@ -92,21 +92,6 @@ function sendtoContent(msg) {
     };
 }
 
-function test() {
-    try {
-        var s = $.ajax({
-            url: "https://www.linkedin.com/litms/api/metadata/user",
-            type: "get",
-            success: function(result) {
-                console.log(result);
-            }
-        });
-        // var uuid = s['id']['dmp'];
-    } catch (err) {
-        console.log(err);
-    }
-}
-
 function linkedinData() {
 
     setTimeout(function() {
@@ -209,7 +194,7 @@ function twitterData() {
                 }
             })
         })
-    }, 3000)
+    }, 4000)
 }
 
 function facebookData() {
@@ -308,14 +293,6 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             break;
         case 'doneliLogin':
             setTimeout(linkedinData(), 2000);
-            break;
-        case 'testtimeout':
-            setTimeout(function() { console.log('testsettimeout5s') }, 5000);
-            break;
-        case 'testliCookie':
-            try {
-                test();
-            } catch (e) {}
             break;
         default:
             console.log('nofunction');

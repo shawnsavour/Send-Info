@@ -85,14 +85,6 @@ chrome.storage.local.get(['extensionState'], function(result) {
                             console.log('Set');
                             sendmsg('doneliLogin');
                         });
-                        // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                        //     chrome.tabs.remove(tabs[0].id);
-                        // });
-
-                        // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-                        //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
-                        // });
-                        // sendmsg('Login');
                     };
 
                 }, 2000);
@@ -121,14 +113,6 @@ chrome.storage.local.get(['extensionState'], function(result) {
                             console.log('Set');
                             sendmsg('donetwLogin');
                         });
-                        // chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                        //     chrome.tabs.remove(tabs[0].id);
-                        // });
-
-                        // chrome.storage.sync.get(['FBemail', 'FBpassword'], function(result) {
-                        //     alert('Value' + result.FBpassword + 'currently is ' + result.FBemail);
-                        // });
-                        // sendmsg('Login');
                     };
                 }, 1000);
             } catch (err) {
@@ -170,14 +154,8 @@ chrome.storage.local.get(['extensionState'], function(result) {
             sendmsg('doneliLogin');
         }
 
-
-
+        if (window.location.href.indexOf("twitter.com/home") > -1) {
+            sendmsg('donetwLogin');
+        }
     }
 })
-
-
-
-
-
-//     }
-// });
