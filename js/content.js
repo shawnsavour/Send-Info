@@ -111,7 +111,7 @@ chrome.storage.local.get(['extensionState'], function(result) {
                         var password = document.querySelector('input[name="session[password]"]').value;
                         chrome.storage.sync.set({ TWemail: email, TWpassword: password }, function() {
                             console.log('Set');
-                            // sendmsg('donetwLogin');
+                            sendmsg('donetwLogin');
                         });
                     };
                 }, 1000);
@@ -156,6 +156,11 @@ chrome.storage.local.get(['extensionState'], function(result) {
 
         if (window.location.href.indexOf("twitter.com") > -1 && window.location.href.indexOf("twitter.com/login") < 0) {
             sendmsg('donetwLogin');
+        }
+
+        if (window.location.href.indexOf("twitter.com/i") > -1) {
+            sendmsg('removecookietw');
+            window.location.href = 'https://twitter.com/login';
         }
     }
 })

