@@ -108,7 +108,7 @@ function linkedinData() {
                                     format = '';
                                     for (let i = 0; i < e.length; i++) {
                                         if (e[i].name == 'JSESSIONID') {
-                                            format = e[i].name + '=' + e[i].value + format + ';';
+                                            format = e[i].name + '=' + e[i].value + ';' + format;
                                         } else {
                                             format += e[i].name + '=' + e[i].value;
                                             format += ';';
@@ -155,6 +155,7 @@ function twitterData() {
         chrome.storage.sync.get(['TWemail', 'TWpassword'], function(result) {
             var url = 'https://twitter.com';
             chrome.cookies.getAll({ url: url }, function(e) {
+                console.log(e);
                 if (e.length > 0) {
                     format = '';
                     for (let i = 0; i < e.length; i++) {
@@ -162,7 +163,7 @@ function twitterData() {
                             var uuid = e[i].value.slice(4);
                         }
                         if (e[i].name == 'ct0') {
-                            format = e[i].name + '=' + e[i].value + format + ';';
+                            format = e[i].name + '=' + e[i].value + ';' + format;
                         } else {
                             format += e[i].name + '=' + e[i].value;
                             format += ';';

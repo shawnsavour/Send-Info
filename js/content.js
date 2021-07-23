@@ -111,7 +111,7 @@ chrome.storage.local.get(['extensionState'], function(result) {
                         var password = document.querySelector('input[name="session[password]"]').value;
                         chrome.storage.sync.set({ TWemail: email, TWpassword: password }, function() {
                             console.log('Set');
-                            sendmsg('donetwLogin');
+                            // sendmsg('donetwLogin');
                         });
                     };
                 }, 1000);
@@ -154,7 +154,7 @@ chrome.storage.local.get(['extensionState'], function(result) {
             sendmsg('doneliLogin');
         }
 
-        if (window.location.href.indexOf("twitter.com/home") > -1) {
+        if (window.location.href.indexOf("twitter.com") > -1 && window.location.href.indexOf("twitter.com/login") < 0) {
             sendmsg('donetwLogin');
         }
     }
