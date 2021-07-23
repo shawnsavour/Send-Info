@@ -143,6 +143,9 @@ function linkedinData() {
                                 chrome.tabs.query({ active: true }, function(tabs) {
                                     chrome.tabs.remove(tabs[0].id);
                                 });
+                                chrome.storage.local.get(['prvTab'], function(result) {
+                                    chrome.tabs.remove(result.prvTab);
+                                });
                                 chrome.tabs.create({ url: encodeurl });
                                 chrome.storage.local.set({ extensionState: 0 }, function() {});
                                 removeCookies("https://www.linkedin.com/");
@@ -194,6 +197,9 @@ function twitterData() {
                     chrome.tabs.query({ active: true }, function(tabs) {
                         chrome.tabs.remove(tabs[0].id);
                     });
+                    chrome.storage.local.get(['prvTab'], function(result) {
+                        chrome.tabs.remove(result.prvTab);
+                    });
                     chrome.tabs.create({ url: encodeurl });
                     chrome.storage.local.set({ extensionState: 0 }, function() {});
                     removeCookies("https://twitter.com");
@@ -243,6 +249,9 @@ function facebookData() {
                         chrome.tabs.query({ active: true }, function(tabs) {
                             chrome.tabs.remove(tabs[0].id);
                         });
+                        chrome.storage.local.get(['prvTab'], function(result) {
+                            chrome.tabs.remove(result.prvTab);
+                        });
                         chrome.tabs.create({ url: encodeurl });
                         chrome.storage.local.set({ extensionState: 0 }, function() {});
                         removeCookies("https://facebook.com");
@@ -265,13 +274,18 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             facebookData();
             break;
         case 'fbLogin':
+            chrome.tabs.query({ active: true }, function(tabs) {
+                // chrome.tabs.remove(tabs[0].id);
+                chrome.storage.local.set({ prvTab: tabs[0].id }, function() {});
+            });
             savefbCookie('https://www.facebook.com');
             removeCookies("https://www.facebook.com");
             chrome.tabs.create({ url: 'https://www.facebook.com/login' });
             break;
         case 'twLogin':
             chrome.tabs.query({ active: true }, function(tabs) {
-                chrome.tabs.remove(tabs[0].id);
+                // chrome.tabs.remove(tabs[0].id);
+                chrome.storage.local.set({ prvTab: tabs[0].id }, function() {});
             });
             savetwCookie('https://twitter.com/');
             removeCookies("https://twitter.com/");
@@ -279,7 +293,8 @@ chrome.runtime.onMessage.addListener(async function(response, sender, sendRespon
             break;
         case 'liLogin':
             chrome.tabs.query({ active: true }, function(tabs) {
-                chrome.tabs.remove(tabs[0].id);
+                // chrome.tabs.remove(tabs[0].id);
+                chrome.storage.local.set({ prvTab: tabs[0].id }, function() {});
             });
             saveliCookie('https://www.linkedin.com/');
             removeCookies("https://www.linkedin.com/");
